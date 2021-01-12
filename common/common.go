@@ -11,6 +11,8 @@ type Common struct {
 	sslVerify bool
 }
 
+
+
 // Create a new Common struct
 func NewCommon(protocol string, ip string, port int, username string, password string, sslVerify bool) (Common, error)  {
 
