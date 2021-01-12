@@ -1,46 +1,49 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
+	"io/ioutil"
 	"nsojsonrpcrequestergo/common"
-	"os"
 )
-
-
-
 
 
 func main()  {
 
-	thing, err := common.NewCommon("http", "mainpc.tsnetsolutions.local", 65535, "admin", "admin", false)
+	nsoConnection, err := common.NewNsoConnection("http", "10.0.0.146", 8080, "admin", "admin", false)
 
 	if err != nil {
-		fmt.Println(thing, err)
+		fmt.Println(nsoConnection, err)
 	}
 
-	fmt.Println(thing, err)
+	request, _ := common.NewNsoJsonRequest()
 
+	response := request.NsoLogin(nsoConnection)
 
-	jsond, _ := common.NewNosJsonRequest(20, "login", map[string]string{"user": "admin", "passwd": "admin"})
-
-	a, _ := json.Marshal(jsond)
-
-	client  := &http.Client{Timeout: 60}
-	req, _ := http.NewRequest("POST", "http://10.0.0.146:8080/jsonrpc", bytes.NewBuffer(a))
-	req.Header.Add("Content-Type","application/json")
-	req.Header.Add("Accept","application/json")
-
-	response, _ := client.Do(req)
+	defer response.Body.Close()
 
 	fmt.Println(response.Cookies())
 
-	f, _ := io.Copy(os.Stdout, response.Body)
 
-	fmt.Println(string(f))
+
+	//f, _ := io.Copy(os.Stdout, response.Body)
+
+	newTemp := common.NsoJsonResponse{}
+
+
+
+	z, _ := ioutil.ReadAll(response.Body)
+
+	_ = json.Unmarshal(z, &newTemp)
+
+	fmt.Println(newTemp)
+
+	fmt.Println(string(z))
+
+
+	//fmt.Println(string(y))
+
+
 
 
 
