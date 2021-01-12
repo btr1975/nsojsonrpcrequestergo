@@ -11,10 +11,7 @@ import (
 )
 
 
-type JsonRequest struct {
-	Jsonrpc, id, method string
-	params map[string]string
-}
+
 
 
 func main()  {
@@ -28,33 +25,22 @@ func main()  {
 	fmt.Println(thing, err)
 
 
-	jsond := &JsonRequest{
-		Jsonrpc: "2.0",
-		id:      "1000",
-		method:  "login",
-		params: map[string]string{"user": "admin", "passwd": "admin"},
-
-	}
+	jsond, _ := common.NewNosJsonRequest(20, "login", map[string]string{"user": "admin", "passwd": "admin"})
 
 	a, _ := json.Marshal(jsond)
 
-	fmt.Println(string(a))
-
-	b := new(bytes.Buffer)
-	err = json.NewEncoder(b).Encode(jsond)
-	fmt.Println(jsond)
-
-
-	client  := &http.Client{}
-	req, _ := http.NewRequest("POST", "http://10.0.0.146:8080/jsonrpc", b)
+	client  := &http.Client{Timeout: 60}
+	req, _ := http.NewRequest("POST", "http://10.0.0.146:8080/jsonrpc", bytes.NewBuffer(a))
 	req.Header.Add("Content-Type","application/json")
 	req.Header.Add("Accept","application/json")
 
 	response, _ := client.Do(req)
 
-	fmt.Println(response)
+	fmt.Println(response.Cookies())
 
-	io.Copy(os.Stdout, response.Body)
+	f, _ := io.Copy(os.Stdout, response.Body)
+
+	fmt.Println(string(f))
 
 
 

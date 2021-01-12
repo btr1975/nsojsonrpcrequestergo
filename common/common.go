@@ -5,13 +5,30 @@ import (
 	"net"
 )
 
+// JsonRequest holds a basic NSO JSON RPC Request
+// The tags help to convert fields to lowercase
+type NosJsonRequest struct {
+	Jsonrpc string `json:"jsonrpc"`
+	ID int `json:"id"`
+	Method string `json:"method"`
+	Params params `json:"params"`
+}
+
+type params map[string]string
+
 type Common struct {
 	protocol, ip, username, password string
 	port int
 	sslVerify bool
 }
 
+// Create a new NosJsonRequest struct
+func NewNosJsonRequest(id int, method string, params map[string]string) (NosJsonRequest, error) {
 
+
+	return NosJsonRequest{Jsonrpc: "2.0", ID: id, Method: method, Params: params}, nil
+
+}
 
 // Create a new Common struct
 func NewCommon(protocol string, ip string, port int, username string, password string, sslVerify bool) (Common, error)  {
