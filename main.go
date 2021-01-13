@@ -24,21 +24,11 @@ func main()  {
 
 	thing2, _ := thing.NewTransaction("read", "private", "", "reuse")
 
-	poop := common.NsoJsonResponse{}
+	fmt.Println(thing2)
 
+	thing3, _ := thing.GetSystemSetting("all")
 
-	fmt.Println(thing2.ToString())
-	thing2.ToJSON(&poop)
-
-
-
-	fmt.Println(poop.Result)
-
-	v := poop.Result
-
-	for k, s := range v {
-		fmt.Println(k, s)
-	}
+	fmt.Println(thing3)
 
 
 	err = thing.NsoLogout()

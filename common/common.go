@@ -96,7 +96,7 @@ START OF NSO JSON-Rpc Requeser
 type NsoJsonConnection struct {
 	request *req.Req
 	id int
-	th int
+	th float64
 	nsocon NsoJsonRpcHTTPConnection
 }
 
@@ -178,6 +178,7 @@ func (nsoJson *NsoJsonConnection) NsoLogout() error {
 	return nil
 }
 
+// Method to start a new NSO Transaction
 func (nsoJson *NsoJsonConnection) NewTransaction(mode, confMode, tag, onPendingChanges string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -189,6 +190,66 @@ func (nsoJson *NsoJsonConnection) NewTransaction(mode, confMode, tag, onPendingC
 			"conf_mode": confMode,
 			"tag": tag,
 			"on_pending_changes": onPendingChanges,
+		},
+	}
+
+	response, err := nsoJson.sendPost(param)
+
+	if err != nil {
+		return response, err
+	}
+
+	nsoResponse := NewNsoJsonResponse()
+	nsoJson.th = nsoResponse.GetTransactionHandle(response)
+
+	return response, nil
+}
+
+// Method to get all NSO transactions
+func (nsoJson *NsoJsonConnection) GetTransaction() (*req.Resp, error) {
+	param := req.Param{
+		"jsonrpc": "2.0",
+		"id": nsoJson.id,
+		"method": "get_trans",
+	}
+
+	response, err := nsoJson.sendPost(param)
+
+	if err != nil {
+		return response, err
+	}
+
+	return response, nil
+}
+
+// Method to get NSO system settings
+func (nsoJson *NsoJsonConnection) GetSystemSetting(operation string) (*req.Resp, error) {
+	param := req.Param{
+		"jsonrpc": "2.0",
+		"id": nsoJson.id,
+		"method": "get_system_setting",
+		"params": map[string]string{
+			"operation": operation,
+		},
+	}
+
+	response, err := nsoJson.sendPost(param)
+
+	if err != nil {
+		return response, err
+	}
+
+	return response, nil
+}
+
+// Method to abort a request-id
+func (nsoJson *NsoJsonConnection) Abort(requestID int) (*req.Resp, error) {
+	param := req.Param{
+		"jsonrpc": "2.0",
+		"id": nsoJson.id,
+		"method": "abort",
+		"params": map[string]int{
+			"id": requestID,
 		},
 	}
 
@@ -214,4 +275,24 @@ type NsoJsonResponse struct {
 	Error map[string]interface{} `json:"error"`
 }
 
+func NewNsoJsonResponse() (*NsoJsonResponse)  {
 
+	return &NsoJsonResponse{}
+
+}
+
+func (r *NsoJsonResponse) GetTransactionHandle(response *req.Resp) float64  {
+	var th float64
+
+	response.ToJSON(&r)
+
+	for key, value := range r.Result {
+		if key == "th" {
+			th = value.(float64)
+			break
+		}
+	}
+
+	return th
+
+}
