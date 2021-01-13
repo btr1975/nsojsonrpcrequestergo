@@ -1,47 +1,52 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"nsojsonrpcrequestergo/common"
 )
 
 
 func main()  {
 
-	nsoConnection, err := common.NewNsoConnection("http", "10.0.0.146", 8080, "admin", "admin", false)
+	nsoConnection, err := common.NewNsoJsonRpcHTTPConnection("http", "10.0.0.146", 8080, "admin", "admin", false)
 
 	if err != nil {
 		fmt.Println(nsoConnection, err)
 	}
 
-	request, _ := common.NewNsoJsonRequest()
+	// Using req lib
 
-	response := request.NsoLogin(nsoConnection)
+	// req.Debug = true
 
-	defer response.Body.Close()
+	thing, _ := common.NewNsoJsonConnection(nsoConnection)
 
-	fmt.Println(response.Cookies())
+	_ = thing.NsoLogin("admin", "admin")
 
+	thing2, _ := thing.NewTransaction("read", "private", "", "reuse")
 
-
-	//f, _ := io.Copy(os.Stdout, response.Body)
-
-	newTemp := common.NsoJsonResponse{}
+	poop := common.NsoJsonResponse{}
 
 
-
-	z, _ := ioutil.ReadAll(response.Body)
-
-	_ = json.Unmarshal(z, &newTemp)
-
-	fmt.Println(newTemp)
-
-	fmt.Println(string(z))
+	fmt.Println(thing2.ToString())
+	thing2.ToJSON(&poop)
 
 
-	//fmt.Println(string(y))
+
+	fmt.Println(poop.Result)
+
+	v := poop.Result
+
+	for k, s := range v {
+		fmt.Println(k, s)
+	}
+
+
+	err = thing.NsoLogout()
+
+	fmt.Println(err)
+
+
+
 
 
 
