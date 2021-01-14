@@ -26,10 +26,12 @@ func main()  {
 
 	fmt.Println(thing2)
 
-	thing3, _ := thing.GetSystemSetting("all")
+    config, _ := common.NewNsoJsonRpcConfig(thing)
+
+
+	thing3, _ := config.Query("/services/etradeing_spine_and_leaf_devices[device-name='UNIT-TEST-NX-LEA10']/device-type", "keypath-value")
 
 	fmt.Println(thing3)
-
 
 	err = thing.NsoLogout()
 
