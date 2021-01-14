@@ -342,6 +342,22 @@ func (r *NsoJsonResponse) GetTransactionHandle(response *req.Resp) float64  {
 
 }
 
+func (r *NsoJsonResponse) GetQueryHandle(response *req.Resp) float64  {
+	var qh float64
+
+	_ = response.ToJSON(&r)
+
+	for key, value := range r.Result {
+		if key == "qh" {
+			qh = value.(float64)
+			break
+		}
+	}
+
+	return qh
+
+}
+
 /*
 END OF NSO JSON-Rpc Response
 */
@@ -845,17 +861,149 @@ func (config *NsoJsonRpcConfig) Query(xpathExpression, resultAs string) (*req.Re
 	return response, nil
 }
 
+// QueryObject contains a compext query structure
+type QueryObject struct {
+	xpathExpression, path, sortOrder, contextNode, resultAs  string
+	selection, sort []string
+	chunkSize, initialOffset int
+	includeTotal bool
+	qh float64
+}
 
-func (config *NsoJsonRpcConfig) StartQuery(xpathExpression, path string, selection []string, chunkSize, initialOffset int, sort []string, sortOrder string, includeTotal bool, contextNode, resultAs string) (*req.Resp, error) {
+// Constructor for a QueryObject
+// If xpathExpression is defined path will be ignored
+//   :values xpathExpression: A XPATH expression or leave blank to use a keypath instead
+//   :values path: A keypath epression
+//   :values selection: An array of leaf seletions
+//   :values chunkSize: If set to 0 all data is returned, any other value will break data into chunks
+//   :values initialOffset: If set to 0 thing is done any other value sets the offset
+//   :values sort: Array of XPATH expressions use a blank array to not use
+//   :values sortOrder: ascending, or descending "" to not use
+//   :values includeTotal: true to include total records, false to not
+//   :values contextNode: A keypath optional use "" to not use
+//   :values resultAs: string, keypath-value, or leaf_value_as_string
+func NewQueryObject (xpathExpression, path string, selection []string, chunkSize, initialOffset int, sort []string, sortOrder string, includeTotal bool, contextNode, resultAs string) (*QueryObject, error) {
+	var expression, usepath string
+
+	if xpathExpression != "" {
+		expression = xpathExpression
+
+	} else if path != "" {
+		usepath = path
+
+	} else {
+		return &QueryObject{}, errors.New("either xpathExpression needs to be given or path")
+
+	}
+
+	return &QueryObject{xpathExpression: expression, path: usepath, selection: selection, initialOffset: initialOffset, sort: sort, sortOrder: sortOrder, includeTotal: includeTotal, contextNode: contextNode, resultAs: resultAs}, nil
+}
+
+// Method to start a complex query
+//   :vaules QueryObject: A QueryObject
+func (config *NsoJsonRpcConfig) StartQuery(queryObject *QueryObject) (*req.Resp, error) {
+	params := map[string]interface{}{
+		"th": config.nsocon.th,
+	}
+	if queryObject.xpathExpression != "" {
+		params["xpath_expr"] = queryObject.xpathExpression
+		params["selection"] = queryObject.selection
+		params["chunk_size"] = queryObject.chunkSize
+		params["initial_offset"] = queryObject.initialOffset
+		params["include_total"] = queryObject.includeTotal
+		params["result_as"] = queryObject.resultAs
+
+	} else {
+
+
+	}
+
+/*
+	"th": config.nsocon.th,
+	"xpath_expr": queryObject.xpathExpression,
+	"path": queryObject.path,
+	"selection": queryObject.selection,
+	"chunk_size": queryObject.chunkSize,
+	"initial_offset": queryObject.initialOffset,
+	"sort": queryObject.sort,
+	"sort_order": queryObject.sortOrder,
+	"include_total": queryObject.includeTotal,
+	"context_node": queryObject.contextNode,
+	"result_as": queryObject.resultAs,
+ */
+
+
 	param := req.Param{
 		"jsonrpc": "2.0",
 		"id": config.nsocon.id,
 		"method": "start_query",
-		"params": map[string]interface{}{
-			"th": config.nsocon.th,
-			"xpath_expr": xpathExpression,
-			"result_as": resultAs,
+		"params": params,
+	}
 
+	response, err := config.nsocon.sendPost(param)
+
+	nsoResponse := NewNsoJsonResponse()
+	queryObject.qh = nsoResponse.GetQueryHandle(response)
+
+	if err != nil {
+		return response, err
+	}
+
+	return response, nil
+}
+
+// Method to run a complex query
+//   :values queryHandle: A Query Handle this comes from using the StartQuery method
+func (config *NsoJsonRpcConfig) RunQuery(queryObject *QueryObject) (*req.Resp, error) {
+	param := req.Param{
+		"jsonrpc": "2.0",
+		"id": config.nsocon.id,
+		"method": "run_query",
+		"params": map[string]interface{}{
+			"qh": queryObject.qh,
+		},
+	}
+
+	response, err := config.nsocon.sendPost(param)
+
+	if err != nil {
+		return response, err
+	}
+
+	return response, nil
+}
+
+// Method to reset a complex query
+//   :values queryHandle: A Query Handle this comes from using the StartQuery method
+func (config *NsoJsonRpcConfig) ResetQuery(queryObject *QueryObject) (*req.Resp, error) {
+	param := req.Param{
+		"jsonrpc": "2.0",
+		"id": config.nsocon.id,
+		"method": "reset_query",
+		"params": map[string]interface{}{
+			"qh": queryObject.qh,
+		},
+	}
+
+	response, err := config.nsocon.sendPost(param)
+
+	if err != nil {
+		return response, err
+	}
+
+	return response, nil
+}
+
+
+// Method to stop a complex query
+//   :values queryHandle: A Query Handle this comes from using the StartQuery method
+func (config *NsoJsonRpcConfig) StopQuery(queryObject *QueryObject) (*req.Resp, error) {
+	param := req.Param{
+		"jsonrpc": "2.0",
+		"id": config.nsocon.id,
+		"method": "stop_query",
+		"params": map[string]interface{}{
+			"qh": queryObject.qh,
 		},
 	}
 

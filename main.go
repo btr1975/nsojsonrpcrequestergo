@@ -28,10 +28,20 @@ func main()  {
 
     config, _ := common.NewNsoJsonRpcConfig(thing)
 
+    selections := []string{"device-name", "device-type"}
+    var sort []string
 
-	thing3, _ := config.Query("/services/etradeing_spine_and_leaf_devices[device-name='UNIT-TEST-NX-LEA10']/device-type", "keypath-value")
+    queryData, _ := common.NewQueryObject("/services/etradeing_spine_and_leaf_devices", "", selections,0, 0, sort,  "", true, "", "string")
+
+	thing3, _ := config.StartQuery(queryData)
+	thing4, _ := config.RunQuery(queryData)
+	thing5, _ := config.StopQuery(queryData)
+
+
 
 	fmt.Println(thing3)
+	fmt.Println(thing4)
+	fmt.Println(thing5)
 
 	err = thing.NsoLogout()
 
