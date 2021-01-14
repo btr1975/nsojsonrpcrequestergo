@@ -29,13 +29,19 @@ type nsoRequestHeaders struct {
 	Accept string `json:"Accept"`
 }
 
-// Contructor to create a new NsoJsonRpcHTTPConnection struct
+// Constructor to create a new NsoJsonRpcHTTPConnection struct
+//   :values protocol: http, https
+//   :values ip: a IPv4 address, or a CNAME
+//   :values port: 1 to 65535
+//   :values username: A username
+//   :values password: A password
+//   :values sslVerify: true to verify SSL, false not to
 func NewNsoJsonRpcHTTPConnection(protocol string, ip string, port int, username string, password string, sslVerify bool) (*NsoJsonRpcHTTPConnection, error)  {
 
 	// Check if protocol is http, or https
 	if protocol == "http" || protocol == "https" {
 	} else {
-		return &NsoJsonRpcHTTPConnection{}, errors.New("Only http, and https is supported!!")
+		return &NsoJsonRpcHTTPConnection{}, errors.New("only http, and https is supported!!")
 	}
 
 	// Check if ip given is a Ucast IP
@@ -90,7 +96,7 @@ END OF NSO Server connection
 */
 
 /*
-START OF NSO JSON-Rpc Requeser
+START OF NSO JSON-Rpc Requester
 */
 
 type NsoJsonConnection struct {
@@ -100,6 +106,8 @@ type NsoJsonConnection struct {
 	nsocon NsoJsonRpcHTTPConnection
 }
 
+// Constructor to create a new NewNsoJsonConnection struct
+//   :values c: A NsoJsonRpcHTTPConnection
 func NewNsoJsonConnection(c *NsoJsonRpcHTTPConnection) (*NsoJsonConnection, error) {
 	rand.Seed(int64(time.Now().Second()))
 	newId := rand.Intn(65000 - 1 + 1) + 1
@@ -109,6 +117,7 @@ func NewNsoJsonConnection(c *NsoJsonRpcHTTPConnection) (*NsoJsonConnection, erro
 }
 
 // Method to convert the NsoJsonRequest to a bytes.Buffer for transport
+//   :values param: A req.Param
 func (nsoJson *NsoJsonConnection) getJsonRequest(param req.Param) *bytes.Buffer {
 
 	jsonData, _ := json.Marshal(param)
@@ -118,6 +127,7 @@ func (nsoJson *NsoJsonConnection) getJsonRequest(param req.Param) *bytes.Buffer 
 }
 
 // Method to send a POST request
+//   :values param: A req.Param
 func (nsoJson *NsoJsonConnection) sendPost(param req.Param) (*req.Resp, error) {
 	response, err := nsoJson.request.Post(nsoJson.nsocon.NsoUrl(), req.BodyJSON(nsoJson.getJsonRequest(param)), req.HeaderFromStruct(nsoJson.nsocon.NsoHeaders()))
 
@@ -130,6 +140,7 @@ func (nsoJson *NsoJsonConnection) sendPost(param req.Param) (*req.Resp, error) {
 }
 
 // Method to send a GET request
+//   :values param: A req.Param
 func (nsoJson *NsoJsonConnection) sendGet(param req.Param) (*req.Resp, error) {
 	response, err := nsoJson.request.Get(nsoJson.nsocon.NsoUrl(), req.BodyJSON(nsoJson.getJsonRequest(param)), req.HeaderFromStruct(nsoJson.nsocon.NsoHeaders()))
 
@@ -142,6 +153,8 @@ func (nsoJson *NsoJsonConnection) sendGet(param req.Param) (*req.Resp, error) {
 }
 
 // Method to login to the NSO Server
+//   :values username: A username
+//   :values password: A password
 func (nsoJson *NsoJsonConnection) NsoLogin(username, password string) *req.Resp {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -179,6 +192,10 @@ func (nsoJson *NsoJsonConnection) NsoLogout() error {
 }
 
 // Method to start a new NSO Transaction
+//   :values mode:
+//   :values confMode:
+//   :values tag:
+//   :values onPendingChanges:
 func (nsoJson *NsoJsonConnection) NewTransaction(mode, confMode, tag, onPendingChanges string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -223,6 +240,7 @@ func (nsoJson *NsoJsonConnection) GetTransaction() (*req.Resp, error) {
 }
 
 // Method to get NSO system settings
+//   :values operation:
 func (nsoJson *NsoJsonConnection) GetSystemSetting(operation string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -243,6 +261,7 @@ func (nsoJson *NsoJsonConnection) GetSystemSetting(operation string) (*req.Resp,
 }
 
 // Method to abort a request-id
+//   :values requestID:
 func (nsoJson *NsoJsonConnection) Abort(requestID int) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -263,7 +282,7 @@ func (nsoJson *NsoJsonConnection) Abort(requestID int) (*req.Resp, error) {
 }
 
 /*
-END OF NSO JSON-Rpc Requeser
+END OF NSO JSON-Rpc Requester
 */
 
 // NsoJsonResponse holds a basic NSO JSON RPC Response
@@ -275,7 +294,7 @@ type NsoJsonResponse struct {
 	Error map[string]interface{} `json:"error"`
 }
 
-func NewNsoJsonResponse() (*NsoJsonResponse)  {
+func NewNsoJsonResponse() *NsoJsonResponse  {
 
 	return &NsoJsonResponse{}
 
