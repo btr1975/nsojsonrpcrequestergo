@@ -3,8 +3,17 @@ package main
 import (
 	"fmt"
 	"nsojsonrpcrequestergo/common"
+	"strings"
 )
 
+
+func fixResult(result string) []string {
+	remLeftDblBracket := strings.Replace(result, "[[","", -1)
+	remRightDblBracket := strings.Replace(remLeftDblBracket, "]]","", -1)
+	csvFmt := strings.Replace(remRightDblBracket, "] [",",", -1)
+	return strings.Split(csvFmt, ",")
+
+}
 
 func main()  {
 
@@ -38,19 +47,15 @@ func main()  {
 
 	data := common.NewNsoJsonResponse()
 
-	newData, _ := data.ResponseToStruct(thing4)
+	results, err := data.GetQueryResults(thing4)
 
-	resutlData := newData.Result
-
-	for k, v := range resutlData {
-		if k == "results" {
-			fmt.Println(k)
-			fmt.Println(v)
-		}
+	if err != nil {
+		panic("no")
 	}
 
+	fmt.Println(results)
 
-	fmt.Println(resutlData)
+
 
 	thing5, _ := config.StopQuery(queryData)
 
@@ -64,14 +69,4 @@ func main()  {
 
 	fmt.Println(err)
 
-
-
-
-
-
-
-
-
-
 }
-
