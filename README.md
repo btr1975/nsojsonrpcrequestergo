@@ -1,1 +1,1 @@
-# nso-json-rpc-requester-go
+# nsojsonrpcrequestergo

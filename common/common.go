@@ -155,7 +155,7 @@ func (nsoJson *NsoJsonConnection) sendGet(param req.Param) (*req.Resp, error) {
 // Method to login to the NSO Server
 //   :values username: A username
 //   :values password: A password
-func (nsoJson *NsoJsonConnection) NsoLogin(username, password string) *req.Resp {
+func (nsoJson *NsoJsonConnection) NsoLogin(username, password string) error {
 	param := req.Param{
 		"jsonrpc": "2.0",
 		"id": nsoJson.id,
@@ -166,9 +166,13 @@ func (nsoJson *NsoJsonConnection) NsoLogin(username, password string) *req.Resp 
 	request := req.New()
 	nsoJson.request = request
 
-	response, _ := nsoJson.sendPost(param)
+	_, err := nsoJson.sendPost(param)
 
-	return response
+	if err != nil {
+		return err
+	}
+
+	return nil
 
 }
 
@@ -196,7 +200,7 @@ func (nsoJson *NsoJsonConnection) NsoLogout() error {
 //   :values confMode: private, shared, or exclusive
 //   :values tag: "" or a value
 //   :values onPendingChanges: reuse, reject, or discard
-func (nsoJson *NsoJsonConnection) NewTransaction(mode, confMode, tag, onPendingChanges string) (*req.Resp, error) {
+func (nsoJson *NsoJsonConnection) NewTransaction(mode, confMode, tag, onPendingChanges string) error {
 	param := req.Param{
 		"jsonrpc": "2.0",
 		"id": nsoJson.id,
@@ -213,13 +217,13 @@ func (nsoJson *NsoJsonConnection) NewTransaction(mode, confMode, tag, onPendingC
 	response, err := nsoJson.sendPost(param)
 
 	if err != nil {
-		return response, err
+		return err
 	}
 
 	nsoResponse := NewNsoJsonResponse()
 	nsoJson.th = nsoResponse.GetTransactionHandle(response)
 
-	return response, nil
+	return nil
 }
 
 // Method to get all NSO transactions

@@ -3,51 +3,62 @@ package main
 import (
 	"fmt"
 	"nsojsonrpcrequestergo/common"
-	"strings"
 )
 
 
-func fixResult(result string) []string {
-	remLeftDblBracket := strings.Replace(result, "[[","", -1)
-	remRightDblBracket := strings.Replace(remLeftDblBracket, "]]","", -1)
-	csvFmt := strings.Replace(remRightDblBracket, "] [",",", -1)
-	return strings.Split(csvFmt, ",")
-
-}
-
 func main()  {
 
-	nsoConnection, err := common.NewNsoJsonRpcHTTPConnection("http", "10.0.0.146", 8080, "admin", "admin", false)
+
+	nsoHTTPConnection, err := common.NewNsoJsonRpcHTTPConnection("http", "10.0.0.146", 8080, "admin", "admin", false)
+
+	if err != nil {
+		fmt.Println(nsoHTTPConnection, err)
+	}
+
+	nsoConnection, err := common.NewNsoJsonConnection(nsoHTTPConnection)
 
 	if err != nil {
 		fmt.Println(nsoConnection, err)
 	}
 
-	// Using req lib
+	err = nsoConnection.NsoLogin("admin", "admin")
 
-	// req.Debug = true
+	if err != nil {
+		fmt.Println(err)
+	}
 
-	thing, _ := common.NewNsoJsonConnection(nsoConnection)
+	err = nsoConnection.NewTransaction("read", "private", "", "reuse")
 
-	_ = thing.NsoLogin("admin", "admin")
+	if err != nil {
+		fmt.Println(err)
+	}
 
-	thing2, _ := thing.NewTransaction("read", "private", "", "reuse")
+    config, err := common.NewNsoJsonRpcConfig(nsoConnection)
 
-	fmt.Println(thing2)
-
-    config, _ := common.NewNsoJsonRpcConfig(thing)
+	if err != nil {
+		fmt.Println(err)
+	}
 
     selections := []string{"device-name", "device-type"}
     var sort []string
 
-    queryData, _ := common.NewQueryObject("/services/etradeing_spine_and_leaf_devices", "", selections,0, 0, sort,  "", true, "", "string")
+    nsoQuery, err := common.NewQueryObject("/services/etradeing_spine_and_leaf_devices", "", selections,0, 0, sort,  "", true, "", "string")
 
-	thing3, _ := config.StartQuery(queryData)
-	thing4, _ := config.RunQuery(queryData)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = config.StartQuery(nsoQuery)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	nsoQueryData, _ := config.RunQuery(nsoQuery)
 
 	data := common.NewNsoJsonResponse()
 
-	results, err := data.GetQueryResults(thing4)
+	results, err := data.GetQueryResults(nsoQueryData)
 
 	if err != nil {
 		panic("no")
@@ -55,18 +66,19 @@ func main()  {
 
 	fmt.Println(results)
 
+	err = config.StopQuery(nsoQuery)
+
+	if err != nil {
+		fmt.Println(err)
+	}
 
 
-	thing5, _ := config.StopQuery(queryData)
+	err = nsoConnection.NsoLogout()
+
+	if err != nil {
+		fmt.Println(err)
+	}
 
 
-
-	fmt.Println(thing3)
-	fmt.Println(thing4)
-	fmt.Println(thing5)
-
-	err = thing.NsoLogout()
-
-	fmt.Println(err)
 
 }

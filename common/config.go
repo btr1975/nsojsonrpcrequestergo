@@ -544,7 +544,7 @@ func NewQueryObject (xpathExpression, path string, selection []string, chunkSize
 
 // Method to start a complex query
 //   :vaules QueryObject: A QueryObject
-func (config *NsoJsonRpcConfig) StartQuery(queryObject *QueryObject) (*req.Resp, error) {
+func (config *NsoJsonRpcConfig) StartQuery(queryObject *QueryObject) error {
 	params := map[string]interface{}{
 		"th": config.nsocon.th,
 	}
@@ -587,10 +587,10 @@ func (config *NsoJsonRpcConfig) StartQuery(queryObject *QueryObject) (*req.Resp,
 	queryObject.qh = nsoResponse.GetQueryHandle(response)
 
 	if err != nil {
-		return response, err
+		return err
 	}
 
-	return response, nil
+	return nil
 }
 
 // Method to run a complex query
@@ -638,7 +638,7 @@ func (config *NsoJsonRpcConfig) ResetQuery(queryObject *QueryObject) (*req.Resp,
 
 // Method to stop a complex query
 //   :values queryHandle: A Query Handle this comes from using the StartQuery method
-func (config *NsoJsonRpcConfig) StopQuery(queryObject *QueryObject) (*req.Resp, error) {
+func (config *NsoJsonRpcConfig) StopQuery(queryObject *QueryObject) error {
 	param := req.Param{
 		"jsonrpc": "2.0",
 		"id": config.nsocon.id,
@@ -648,11 +648,11 @@ func (config *NsoJsonRpcConfig) StopQuery(queryObject *QueryObject) (*req.Resp, 
 		},
 	}
 
-	response, err := config.nsocon.sendPost(param)
+	_, err := config.nsocon.sendPost(param)
 
 	if err != nil {
-		return response, err
+		return err
 	}
 
-	return response, nil
+	return nil
 }
