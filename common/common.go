@@ -311,7 +311,7 @@ END OF NSO JSON-Rpc Requester
 START OF NSO JSON-Rpc Response
 */
 
-// NsoJsonResponse holds a basic NSO JSON RPC Response
+// NsoJsonResponse holds a NSO JSON RPC Response
 // The tags help to convert fields to lowercase
 type NsoJsonResponse struct {
 	Jsonrpc string `json:"jsonrpc"`
@@ -320,12 +320,28 @@ type NsoJsonResponse struct {
 	Error map[string]interface{} `json:"error"`
 }
 
+// Constructor to create a new NsoJsonResponse struct
 func NewNsoJsonResponse() *NsoJsonResponse  {
 
 	return &NsoJsonResponse{}
 
 }
 
+// Method to convert JSON Response Body to a map
+//   :values response: *req.Resp
+func (r *NsoJsonResponse) ResponseToStruct(response *req.Resp) (*NsoJsonResponse, error) {
+	err := response.ToJSON(&r)
+
+	if err != nil {
+		return r, err
+	}
+
+	return r, nil
+
+}
+
+// Method to get the transaction handle
+//   :values response: *req.Resp
 func (r *NsoJsonResponse) GetTransactionHandle(response *req.Resp) float64  {
 	var th float64
 
@@ -342,6 +358,8 @@ func (r *NsoJsonResponse) GetTransactionHandle(response *req.Resp) float64  {
 
 }
 
+// Method to get the query handle
+//   :values response: *req.Resp
 func (r *NsoJsonResponse) GetQueryHandle(response *req.Resp) float64  {
 	var qh float64
 
@@ -874,7 +892,7 @@ type QueryObject struct {
 // If xpathExpression is defined path will be ignored
 //   :values xpathExpression: A XPATH expression or leave blank to use a keypath instead
 //   :values path: A keypath epression
-//   :values selection: An array of leaf seletions
+//   :values selection: An array of leaf selections use empty array at your own risk
 //   :values chunkSize: If set to 0 all data is returned, any other value will break data into chunks
 //   :values initialOffset: If set to 0 thing is done any other value sets the offset
 //   :values sort: Array of XPATH expressions use a blank array to not use
@@ -896,7 +914,7 @@ func NewQueryObject (xpathExpression, path string, selection []string, chunkSize
 
 	}
 
-	return &QueryObject{xpathExpression: expression, path: usepath, selection: selection, initialOffset: initialOffset, sort: sort, sortOrder: sortOrder, includeTotal: includeTotal, contextNode: contextNode, resultAs: resultAs}, nil
+	return &QueryObject{xpathExpression: expression, path: usepath, selection: selection, chunkSize: chunkSize, initialOffset: initialOffset, sort: sort, sortOrder: sortOrder, includeTotal: includeTotal, contextNode: contextNode, resultAs: resultAs}, nil
 }
 
 // Method to start a complex query
@@ -907,31 +925,29 @@ func (config *NsoJsonRpcConfig) StartQuery(queryObject *QueryObject) (*req.Resp,
 	}
 	if queryObject.xpathExpression != "" {
 		params["xpath_expr"] = queryObject.xpathExpression
-		params["selection"] = queryObject.selection
-		params["chunk_size"] = queryObject.chunkSize
-		params["initial_offset"] = queryObject.initialOffset
-		params["include_total"] = queryObject.includeTotal
-		params["result_as"] = queryObject.resultAs
+		if len(queryObject.selection) > 0 {
+			params["selection"] = queryObject.selection
+		}
+
+		if len(queryObject.sort) > 0 {
+			params["sort"] = queryObject.sort
+		}
 
 	} else {
-
+		params["path"] = queryObject.path
+		if queryObject.contextNode != "" {
+			params["context_node"] = queryObject.contextNode
+		}
 
 	}
+	params["chunk_size"] = queryObject.chunkSize
+	params["initial_offset"] = queryObject.initialOffset
+	if queryObject.sortOrder != "" {
+		params["sort_order"] = queryObject.sortOrder
+	}
 
-/*
-	"th": config.nsocon.th,
-	"xpath_expr": queryObject.xpathExpression,
-	"path": queryObject.path,
-	"selection": queryObject.selection,
-	"chunk_size": queryObject.chunkSize,
-	"initial_offset": queryObject.initialOffset,
-	"sort": queryObject.sort,
-	"sort_order": queryObject.sortOrder,
-	"include_total": queryObject.includeTotal,
-	"context_node": queryObject.contextNode,
-	"result_as": queryObject.resultAs,
- */
-
+	params["include_total"] = queryObject.includeTotal
+	params["result_as"] = queryObject.resultAs
 
 	param := req.Param{
 		"jsonrpc": "2.0",

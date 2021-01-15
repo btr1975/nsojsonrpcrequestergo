@@ -35,6 +35,23 @@ func main()  {
 
 	thing3, _ := config.StartQuery(queryData)
 	thing4, _ := config.RunQuery(queryData)
+
+	data := common.NewNsoJsonResponse()
+
+	newData, _ := data.ResponseToStruct(thing4)
+
+	resutlData := newData.Result
+
+	for k, v := range resutlData {
+		if k == "results" {
+			fmt.Println(k)
+			fmt.Println(v)
+		}
+	}
+
+
+	fmt.Println(resutlData)
+
 	thing5, _ := config.StopQuery(queryData)
 
 
