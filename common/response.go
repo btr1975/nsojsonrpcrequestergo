@@ -100,3 +100,24 @@ func (r *NsoJsonResponse) GetQueryResults(response *req.Resp) ([]string, error){
 	return []string{}, errors.New("could not find results")
 
 }
+
+// Method to get the comet handle
+//   :values response: *req.Resp
+func (r *NsoJsonResponse) GetCometHandle(response *req.Resp) (string, error){
+	_, err := r.ResponseToStruct(response)
+
+	if err != nil {
+		return "", err
+	}
+
+	resutlData := r.Result
+	for k, v := range resutlData {
+		if k == "handle" {
+			return fmt.Sprintf("%s", v), nil
+		}
+	}
+
+	return "", errors.New("could not find handle")
+
+}
+

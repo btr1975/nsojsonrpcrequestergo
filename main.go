@@ -2,11 +2,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/imroc/req"
 	"nsojsonrpcrequestergo/common"
 )
 
 
 func main()  {
+
+	req.Debug = true
 
 
 	nsoHTTPConnection, err := common.NewNsoJsonRpcHTTPConnection("http", "10.0.0.146", 8080, "admin", "admin", false)
@@ -20,6 +23,34 @@ func main()  {
 	if err != nil {
 		fmt.Println(nsoConnection, err)
 	}
+
+	nsoComet, err := common.NewNsoJsonRpcComet(nsoConnection)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = nsoComet.StartComet("admin", "admin")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	_, err = nsoComet.SubscribeChanges("/services/etradeing_l2vni")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(nsoComet.CometPoll())
+
+	fmt.Println(nsoComet.CometPoll())
+
+	fmt.Println(nsoComet.CometPoll())
+
+	fmt.Println(nsoComet.StopComet())
+
+
 
 	err = nsoConnection.NsoLogin("admin", "admin")
 
