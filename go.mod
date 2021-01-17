@@ -1,4 +1,4 @@
-module nsojsonrpcrequestergo
+module github.com/btr1975/nsojsonrpcrequestergo
 
 go 1.15
 
