@@ -19,8 +19,14 @@ type NsoJsonRpcComet struct {
 
 // Constructor for a NsoJsonRpcComet
 //   :values nsoJson: A NsoJsonConnection
-func NewNsoJsonRpcComet(nsoJson *NsoJsonConnection) (*NsoJsonRpcComet, error)  {
+func NewNsoJsonRpcComet(protocol string, ip string, port int, username string, password string, sslVerify bool) (*NsoJsonRpcComet, error)  {
 	cometID := fmt.Sprintf("remote-comet-%d", rand.Intn(65000 - 1 + 1) + 1)
+
+	nsoJson, err := NewNsoJsonConnection(protocol, ip, port, username, password, sslVerify)
+
+	if err != nil {
+		return &NsoJsonRpcComet{}, err
+	}
 
 	return &NsoJsonRpcComet{nsocon: *nsoJson, cometStarted: false, cometID: cometID}, nil
 

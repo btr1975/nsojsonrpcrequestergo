@@ -14,7 +14,13 @@ type NsoJsonRpcConfig struct {
 
 // Constructor for a NsoJsonRpcConfig
 //   :values nsoJson: A NsoJsonConnection
-func NewNsoJsonRpcConfig(nsoJson *NsoJsonConnection) (*NsoJsonRpcConfig, error)  {
+func NewNsoJsonRpcConfig(protocol string, ip string, port int, username string, password string, sslVerify bool) (*NsoJsonRpcConfig, error)  {
+
+	nsoJson, err := NewNsoJsonConnection(protocol, ip, port, username, password, sslVerify)
+
+	if err != nil {
+		return &NsoJsonRpcConfig{}, err
+	}
 
 	return &NsoJsonRpcConfig{nsocon: *nsoJson}, nil
 

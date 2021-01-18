@@ -108,9 +108,15 @@ type NsoJsonConnection struct {
 
 // Constructor to create a new NewNsoJsonConnection struct
 //   :values c: A NsoJsonRpcHTTPConnection
-func NewNsoJsonConnection(c *NsoJsonRpcHTTPConnection) (*NsoJsonConnection, error) {
+func NewNsoJsonConnection(protocol string, ip string, port int, username string, password string, sslVerify bool) (*NsoJsonConnection, error) {
 	rand.Seed(int64(time.Now().Second()))
 	newId := rand.Intn(65000 - 1 + 1) + 1
+
+	c, err := NewNsoJsonRpcHTTPConnection(protocol, ip, port, username, password, sslVerify)
+
+	if err != nil {
+		return &NsoJsonConnection{}, err
+	}
 
 	return &NsoJsonConnection{id: newId, nsocon: *c}, nil
 
