@@ -69,6 +69,53 @@ func (config *NsoJsonRpcConfig) NewTransaction(mode, confMode, tag, onPendingCha
 	return nil
 }
 
+// Method to get all NSO transactions
+func (config *NsoJsonRpcConfig) GetTransaction() (*req.Resp, error) {
+	response, err := config.nsocon.GetTransaction()
+
+	if err != nil {
+		return response, err
+	}
+
+	return response, nil
+}
+
+// Method to get NSO system settings
+//   :values operation: capabilities, customizations , models, user, version, or all
+func (config *NsoJsonRpcConfig) GetSystemSetting(operation string) (*req.Resp, error) {
+	response, err := config.nsocon.GetSystemSetting(operation)
+
+	if err != nil {
+		return response, err
+	}
+
+	return response, nil
+}
+
+// Method to abort a request-id
+//   :values requestID: An id
+func (config *NsoJsonRpcConfig) Abort(requestID int) (*req.Resp, error) {
+	response, err := config.nsocon.Abort(requestID)
+
+	if err != nil {
+		return response, err
+	}
+
+	return response, nil
+}
+
+// Method to evaluate a xpath expression
+//   :values xpathExpression: An xpath expression
+func (config *NsoJsonRpcConfig) EvalXPATH(xpathExpression string) (*req.Resp, error) {
+	response, err := config.nsocon.EvalXPATH(xpathExpression)
+
+	if err != nil {
+		return response, err
+	}
+
+	return response, nil
+}
+
 // Method to show NSO config
 //   :values path: A key path
 //   :values resultAs: string, or json
