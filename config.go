@@ -8,7 +8,7 @@ import (
 
 // NsoJsonRpcConfig holds a NSO JSON RPC config needs
 type NsoJsonRpcConfig struct {
-	nsocon NsoJsonConnection
+	nsocon nsoJsonConnection
 
 }
 
@@ -16,7 +16,7 @@ type NsoJsonRpcConfig struct {
 //   :values nsoJson: A NsoJsonConnection
 func NewNsoJsonRpcConfig(protocol string, ip string, port int, username string, password string, sslVerify bool) (*NsoJsonRpcConfig, error)  {
 
-	nsoJson, err := NewNsoJsonConnection(protocol, ip, port, username, password, sslVerify)
+	nsoJson, err := newNsoJsonConnection(protocol, ip, port, username, password, sslVerify)
 
 	if err != nil {
 		return &NsoJsonRpcConfig{}, err

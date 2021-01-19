@@ -19,7 +19,7 @@ func TestNewNsoJsonRpcHTTPConnectionGoodParams(t *testing.T) {
 
 
 	for _, scenario := range scenarios {
-		tempStruct := &NsoJsonRpcHTTPConnection{
+		tempStruct := &nsoJsonRpcHTTPConnection{
 			protocol:  scenario.protocol,
 			ip:        scenario.ip,
 			username:  scenario.username,
@@ -32,7 +32,7 @@ func TestNewNsoJsonRpcHTTPConnectionGoodParams(t *testing.T) {
 			},
 		}
 
-		rcvStruct, err := NewNsoJsonRpcHTTPConnection(scenario.protocol, scenario.ip, scenario.port, scenario.username, scenario.password, scenario.sslVerify)
+		rcvStruct, err := newNsoJsonRpcHTTPConnection(scenario.protocol, scenario.ip, scenario.port, scenario.username, scenario.password, scenario.sslVerify)
 		if err != nil {
 			t.Fail()
 		} else {
@@ -79,7 +79,7 @@ func TestNewNsoJsonRpcHTTPConnectionBadParams(t *testing.T) {
 	}
 
 	for _, scenario := range scenarios {
-		_, err := NewNsoJsonRpcHTTPConnection(scenario.protocol, scenario.ip, scenario.port, scenario.username, scenario.password, scenario.sslVerify)
+		_, err := newNsoJsonRpcHTTPConnection(scenario.protocol, scenario.ip, scenario.port, scenario.username, scenario.password, scenario.sslVerify)
 		if err == nil {
 			t.Fail()
 
@@ -107,7 +107,7 @@ func TestNsoJsonRpcHTTPConnection_NsoUrl(t *testing.T) {
 	}
 
 	for _, scenario := range scenarios {
-		rcvStruct, err := NewNsoJsonRpcHTTPConnection(scenario.protocol, scenario.ip, scenario.port, scenario.username, scenario.password, scenario.sslVerify)
+		rcvStruct, err := newNsoJsonRpcHTTPConnection(scenario.protocol, scenario.ip, scenario.port, scenario.username, scenario.password, scenario.sslVerify)
 		if err != nil {
 			t.Fail()
 		} else {

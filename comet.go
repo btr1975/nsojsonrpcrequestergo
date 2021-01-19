@@ -9,7 +9,7 @@ import (
 
 // NsoJsonRpcComet holds a NSO JSON RPC comet needs
 type NsoJsonRpcComet struct {
-	nsocon NsoJsonConnection
+	nsocon nsoJsonConnection
 	cometStarted bool
 	cometID string
 	handles []string
@@ -22,7 +22,7 @@ type NsoJsonRpcComet struct {
 func NewNsoJsonRpcComet(protocol string, ip string, port int, username string, password string, sslVerify bool) (*NsoJsonRpcComet, error)  {
 	cometID := fmt.Sprintf("remote-comet-%d", rand.Intn(65000 - 1 + 1) + 1)
 
-	nsoJson, err := NewNsoJsonConnection(protocol, ip, port, username, password, sslVerify)
+	nsoJson, err := newNsoJsonConnection(protocol, ip, port, username, password, sslVerify)
 
 	if err != nil {
 		return &NsoJsonRpcComet{}, err
