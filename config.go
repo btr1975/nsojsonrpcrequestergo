@@ -13,7 +13,12 @@ type NsoJsonRpcConfig struct {
 }
 
 // Constructor for a NsoJsonRpcConfig
-//   :values nsoJson: A NsoJsonConnection
+//   :values protocol: http, https
+//   :values ip: a IPv4 address, or a CNAME
+//   :values port: 1 to 65535
+//   :values username: A username
+//   :values password: A password
+//   :values sslVerify: true to verify SSL, false not to
 func NewNsoJsonRpcConfig(protocol string, ip string, port int, username string, password string, sslVerify bool) (*NsoJsonRpcConfig, error)  {
 
 	nsoJson, err := newNsoJsonConnection(protocol, ip, port, username, password, sslVerify)

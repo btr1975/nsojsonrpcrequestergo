@@ -106,8 +106,13 @@ type nsoJsonConnection struct {
 	nsocon nsoJsonRpcHTTPConnection
 }
 
-// Constructor to create a new NewNsoJsonConnection struct
-//   :values c: A NsoJsonRpcHTTPConnection
+// Constructor to create a new newNsoJsonConnection struct
+//   :values protocol: http, https
+//   :values ip: a IPv4 address, or a CNAME
+//   :values port: 1 to 65535
+//   :values username: A username
+//   :values password: A password
+//   :values sslVerify: true to verify SSL, false not to
 func newNsoJsonConnection(protocol string, ip string, port int, username string, password string, sslVerify bool) (*nsoJsonConnection, error) {
 	rand.Seed(int64(time.Now().Second()))
 	newId := rand.Intn(65000 - 1 + 1) + 1
@@ -159,14 +164,12 @@ func (nsoJson *nsoJsonConnection) sendGet(param req.Param) (*req.Resp, error) {
 }
 
 // Method to login to the NSO Server
-//   :values username: A username
-//   :values password: A password
-func (nsoJson *nsoJsonConnection) NsoLogin(username, password string) error {
+func (nsoJson *nsoJsonConnection) NsoLogin() error {
 	param := req.Param{
 		"jsonrpc": "2.0",
 		"id": nsoJson.id,
 		"method": "login",
-		"params": map[string]string{"user": username, "passwd": password},
+		"params": map[string]string{"user": nsoJson.nsocon.username, "passwd": nsoJson.nsocon.password},
 	}
 
 	request := req.New()

@@ -18,7 +18,12 @@ type NsoJsonRpcComet struct {
 
 
 // Constructor for a NsoJsonRpcComet
-//   :values nsoJson: A NsoJsonConnection
+//   :values protocol: http, https
+//   :values ip: a IPv4 address, or a CNAME
+//   :values port: 1 to 65535
+//   :values username: A username
+//   :values password: A password
+//   :values sslVerify: true to verify SSL, false not to
 func NewNsoJsonRpcComet(protocol string, ip string, port int, username string, password string, sslVerify bool) (*NsoJsonRpcComet, error)  {
 	cometID := fmt.Sprintf("remote-comet-%d", rand.Intn(65000 - 1 + 1) + 1)
 
@@ -32,7 +37,7 @@ func NewNsoJsonRpcComet(protocol string, ip string, port int, username string, p
 
 }
 
-func (com *NsoJsonRpcComet) StartComet(username, password string) error {
+func (com *NsoJsonRpcComet) StartComet() error {
 	err := com.checkCometState(false)
 
 	if err != nil {
@@ -40,7 +45,7 @@ func (com *NsoJsonRpcComet) StartComet(username, password string) error {
 	}
 
 	com.cometStarted = true
-	err = com.nsocon.NsoLogin(username, password)
+	err = com.nsocon.NsoLogin()
 
 	if err != nil {
 		return err
