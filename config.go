@@ -31,6 +31,44 @@ func NewNsoJsonRpcConfig(protocol string, ip string, port int, username string, 
 
 }
 
+// Method to login to the NSO Server
+func (config *NsoJsonRpcConfig) NsoLogin() error {
+	err := config.nsocon.NsoLogin()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+// Method to logout to the NSO Server
+func (config *NsoJsonRpcConfig) NsoLogout() error {
+	err := config.nsocon.NsoLogout()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Method to start a new NSO Transaction
+//   :values mode: read, or read_write
+//   :values confMode: private, shared, or exclusive
+//   :values tag: "" or a value
+//   :values onPendingChanges: reuse, reject, or discard
+func (config *NsoJsonRpcConfig) NewTransaction(mode, confMode, tag, onPendingChanges string) error {
+	err := config.nsocon.NewTransaction(mode, confMode, tag, onPendingChanges)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // Method to show NSO config
 //   :values path: A key path
 //   :values resultAs: string, or json
