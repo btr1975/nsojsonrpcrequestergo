@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestNewNsoJsonRpcHTTPConnectionGoodParams(t *testing.T) {
+func Test_newNsoJsonRpcHTTPConnectionGoodParams(t *testing.T) {
 	scenarios := [] struct{
 		protocol, ip, username, password string
 		port int
@@ -64,7 +64,7 @@ func TestNewNsoJsonRpcHTTPConnectionGoodParams(t *testing.T) {
 
 }
 
-func TestNewNsoJsonRpcHTTPConnectionBadParams(t *testing.T) {
+func Test_newNsoJsonRpcHTTPConnectionBadParams(t *testing.T) {
 	scenarios := [] struct{
 		protocol, ip, username, password string
 		port int
@@ -94,7 +94,7 @@ func TestNewNsoJsonRpcHTTPConnectionBadParams(t *testing.T) {
 
 }
 
-func TestNsoJsonRpcHTTPConnection_NsoUrl(t *testing.T) {
+func Test_newNsoJsonRpcHTTPConnection_NsoUrl(t *testing.T) {
 	scenarios := [] struct{
 		protocol, ip, username, password string
 		port int
@@ -116,6 +116,45 @@ func TestNsoJsonRpcHTTPConnection_NsoUrl(t *testing.T) {
 			}
 
 		}
+
+	}
+
+}
+
+func Test_newNsoJsonConnection(t *testing.T) {
+	scenarios := [] struct{
+		protocol, ip, username, password string
+		port int
+		sslVerify bool
+		headers nsoRequestHeaders
+		expect string
+	}{
+		{protocol: "http", ip: "192.168.1.1", port: 8080, username: "admin", password: "admin", sslVerify: false, expect: "http://192.168.1.1:8080/jsonrpc"},
+		{protocol: "https", ip: "192.168.1.1", port: 443, username: "user", password: "pass", sslVerify: true, expect: "https://192.168.1.1:443/jsonrpc"},
+	}
+
+	for _, scenario := range scenarios {
+		_, _ = newNsoJsonConnection(scenario.protocol, scenario.ip, scenario.port, scenario.username, scenario.password, scenario.sslVerify)
+
+	}
+}
+
+func Test_nsoJsonConnection_sendPost(* testing.T) {
+	scenarios := [] struct{
+		protocol, ip, username, password string
+		port int
+		sslVerify bool
+		headers nsoRequestHeaders
+		expect string
+	}{
+		{protocol: "http", ip: "192.168.1.1", port: 8080, username: "admin", password: "admin", sslVerify: false, expect: "http://192.168.1.1:8080/jsonrpc"},
+		{protocol: "https", ip: "192.168.1.1", port: 443, username: "user", password: "pass", sslVerify: true, expect: "https://192.168.1.1:443/jsonrpc"},
+	}
+
+	for _, scenario := range scenarios {
+		_, _ = newNsoJsonConnection(scenario.protocol, scenario.ip, scenario.port, scenario.username, scenario.password, scenario.sslVerify)
+
+
 
 	}
 
