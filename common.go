@@ -140,6 +140,14 @@ func (nsoJson *nsoJsonConnection) getJsonRequest(param req.Param) *bytes.Buffer 
 // Method to send a POST request
 //   :values param: A req.Param
 func (nsoJson *nsoJsonConnection) sendPost(param req.Param) (*req.Resp, error) {
+	if nsoJson.nsocon.sslVerify == true {
+		nsoJson.request.EnableInsecureTLS(false)
+
+	} else {
+		nsoJson.request.EnableInsecureTLS(true)
+
+	}
+
 	response, err := nsoJson.request.Post(nsoJson.nsocon.NsoUrl(), req.BodyJSON(nsoJson.getJsonRequest(param)), req.HeaderFromStruct(nsoJson.nsocon.NsoHeaders()))
 
 	if err != nil {
@@ -153,6 +161,14 @@ func (nsoJson *nsoJsonConnection) sendPost(param req.Param) (*req.Resp, error) {
 // Method to send a GET request
 //   :values param: A req.Param
 func (nsoJson *nsoJsonConnection) sendGet(param req.Param) (*req.Resp, error) {
+	if nsoJson.nsocon.sslVerify == true {
+		nsoJson.request.EnableInsecureTLS(false)
+
+	} else {
+		nsoJson.request.EnableInsecureTLS(true)
+
+	}
+
 	response, err := nsoJson.request.Get(nsoJson.nsocon.NsoUrl(), req.BodyJSON(nsoJson.getJsonRequest(param)), req.HeaderFromStruct(nsoJson.nsocon.NsoHeaders()))
 
 	if err != nil {
