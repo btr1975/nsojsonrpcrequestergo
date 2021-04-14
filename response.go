@@ -10,14 +10,14 @@ import (
 // NsoJsonResponse holds a NSO JSON RPC Response
 // The tags help to convert fields to lowercase
 type NsoJsonResponse struct {
-	Jsonrpc string `json:"jsonrpc"`
-	Result map[string]interface{} `json:"result"`
-	ID int `json:"id"`
-	Error map[string]interface{} `json:"error"`
+	Jsonrpc string                 `json:"jsonrpc"`
+	Result  map[string]interface{} `json:"result"`
+	ID      int                    `json:"id"`
+	Error   map[string]interface{} `json:"error"`
 }
 
 // Constructor to create a new NsoJsonResponse struct
-func NewNsoJsonResponse() *NsoJsonResponse  {
+func NewNsoJsonResponse() *NsoJsonResponse {
 
 	return &NsoJsonResponse{}
 
@@ -38,7 +38,7 @@ func (r *NsoJsonResponse) ResponseToStruct(response *req.Resp) (*NsoJsonResponse
 
 // Method to get the transaction handle
 //   :values response: *req.Resp
-func (r *NsoJsonResponse) GetTransactionHandle(response *req.Resp) float64  {
+func (r *NsoJsonResponse) GetTransactionHandle(response *req.Resp) float64 {
 	var th float64
 
 	_ = response.ToJSON(&r)
@@ -56,7 +56,7 @@ func (r *NsoJsonResponse) GetTransactionHandle(response *req.Resp) float64  {
 
 // Method to get the query handle
 //   :values response: *req.Resp
-func (r *NsoJsonResponse) GetQueryHandle(response *req.Resp) float64  {
+func (r *NsoJsonResponse) GetQueryHandle(response *req.Resp) float64 {
 	var qh float64
 
 	_ = response.ToJSON(&r)
@@ -75,16 +75,16 @@ func (r *NsoJsonResponse) GetQueryHandle(response *req.Resp) float64  {
 // Method to convert the query results string to a array
 //   :values result: result string from query
 func (r *NsoJsonResponse) fixQueryResults(result string) []string {
-	remLeftDblBracket := strings.Replace(result, "[[","", -1)
-	remRightDblBracket := strings.Replace(remLeftDblBracket, "]]","", -1)
-	csvFmt := strings.Replace(remRightDblBracket, "] [",",", -1)
+	remLeftDblBracket := strings.Replace(result, "[[", "", -1)
+	remRightDblBracket := strings.Replace(remLeftDblBracket, "]]", "", -1)
+	csvFmt := strings.Replace(remRightDblBracket, "] [", ",", -1)
 	return strings.Split(csvFmt, ",")
 
 }
 
 // Method to get the query results
 //   :values response: *req.Resp
-func (r *NsoJsonResponse) GetQueryResults(response *req.Resp) ([]string, error){
+func (r *NsoJsonResponse) GetQueryResults(response *req.Resp) ([]string, error) {
 	_, err := r.ResponseToStruct(response)
 	if err != nil {
 		return []string{}, err
@@ -103,7 +103,7 @@ func (r *NsoJsonResponse) GetQueryResults(response *req.Resp) ([]string, error){
 
 // Method to get the comet handle
 //   :values response: *req.Resp
-func (r *NsoJsonResponse) GetCometHandle(response *req.Resp) (string, error){
+func (r *NsoJsonResponse) GetCometHandle(response *req.Resp) (string, error) {
 	_, err := r.ResponseToStruct(response)
 
 	if err != nil {
@@ -120,4 +120,3 @@ func (r *NsoJsonResponse) GetCometHandle(response *req.Resp) (string, error){
 	return "", errors.New("could not find handle")
 
 }
-

@@ -9,13 +9,11 @@ import (
 
 // NsoJsonRpcComet holds a NSO JSON RPC comet needs
 type NsoJsonRpcComet struct {
-	nsocon nsoJsonConnection
+	nsocon       nsoJsonConnection
 	cometStarted bool
-	cometID string
-	handles []string
-
+	cometID      string
+	handles      []string
 }
-
 
 // Constructor for a NsoJsonRpcComet
 //   :values protocol: http, https
@@ -24,8 +22,8 @@ type NsoJsonRpcComet struct {
 //   :values username: A username
 //   :values password: A password
 //   :values sslVerify: true to verify SSL, false not to
-func NewNsoJsonRpcComet(protocol string, ip string, port int, username string, password string, sslVerify bool) (*NsoJsonRpcComet, error)  {
-	cometID := fmt.Sprintf("remote-comet-%d", rand.Intn(65000 - 1 + 1) + 1)
+func NewNsoJsonRpcComet(protocol string, ip string, port int, username string, password string, sslVerify bool) (*NsoJsonRpcComet, error) {
+	cometID := fmt.Sprintf("remote-comet-%d", rand.Intn(65000-1+1)+1)
 
 	nsoJson, err := newNsoJsonConnection(protocol, ip, port, username, password, sslVerify)
 
@@ -67,7 +65,6 @@ func (com *NsoJsonRpcComet) StartComet() error {
 
 }
 
-
 func (com *NsoJsonRpcComet) StopComet() error {
 	err := com.checkCometState(true)
 
@@ -99,10 +96,7 @@ func (com *NsoJsonRpcComet) StopComet() error {
 
 }
 
-
-
-
-func (com *NsoJsonRpcComet) CometPoll() (*req.Resp, error)  {
+func (com *NsoJsonRpcComet) CometPoll() (*req.Resp, error) {
 	response, err := com.comet()
 
 	if err != nil {
@@ -113,19 +107,16 @@ func (com *NsoJsonRpcComet) CometPoll() (*req.Resp, error)  {
 
 	return response, nil
 
-
 }
 
-
-func (com *NsoJsonRpcComet) SubscribeChanges(path string) (*req.Resp, error)  {
+func (com *NsoJsonRpcComet) SubscribeChanges(path string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": com.nsocon.id,
-		"method": "subscribe_changes",
+		"id":      com.nsocon.id,
+		"method":  "subscribe_changes",
 		"params": map[string]interface{}{
 			"comet_id": com.cometID,
-			"path": path,
-
+			"path":     path,
 		},
 	}
 
@@ -143,7 +134,7 @@ func (com *NsoJsonRpcComet) SubscribeChanges(path string) (*req.Resp, error)  {
 		return response, err
 	}
 
-	com.handles  = append(com.handles, newHandle)
+	com.handles = append(com.handles, newHandle)
 
 	response, err = com.startSubscription(newHandle)
 
@@ -153,21 +144,17 @@ func (com *NsoJsonRpcComet) SubscribeChanges(path string) (*req.Resp, error)  {
 
 	return response, nil
 
-
 }
 
-
-
-func (com *NsoJsonRpcComet) SubscribePollLeaf(path string, interval int) (*req.Resp, error)  {
+func (com *NsoJsonRpcComet) SubscribePollLeaf(path string, interval int) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": com.nsocon.id,
-		"method": "subscribe_poll_leaf",
+		"id":      com.nsocon.id,
+		"method":  "subscribe_poll_leaf",
 		"params": map[string]interface{}{
 			"comet_id": com.cometID,
-			"path": path,
+			"path":     path,
 			"interval": interval,
-
 		},
 	}
 
@@ -185,7 +172,7 @@ func (com *NsoJsonRpcComet) SubscribePollLeaf(path string, interval int) (*req.R
 		return response, err
 	}
 
-	com.handles  = append(com.handles, newHandle)
+	com.handles = append(com.handles, newHandle)
 
 	response, err = com.startSubscription(newHandle)
 
@@ -197,17 +184,14 @@ func (com *NsoJsonRpcComet) SubscribePollLeaf(path string, interval int) (*req.R
 
 }
 
-
-
-func (com *NsoJsonRpcComet) SubscribeCDBOper(path string) (*req.Resp, error)  {
+func (com *NsoJsonRpcComet) SubscribeCDBOper(path string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": com.nsocon.id,
-		"method": "subscribe_cdboper",
+		"id":      com.nsocon.id,
+		"method":  "subscribe_cdboper",
 		"params": map[string]interface{}{
 			"comet_id": com.cometID,
-			"path": path,
-
+			"path":     path,
 		},
 	}
 
@@ -225,7 +209,7 @@ func (com *NsoJsonRpcComet) SubscribeCDBOper(path string) (*req.Resp, error)  {
 		return response, err
 	}
 
-	com.handles  = append(com.handles, newHandle)
+	com.handles = append(com.handles, newHandle)
 
 	response, err = com.startSubscription(newHandle)
 
@@ -237,15 +221,13 @@ func (com *NsoJsonRpcComet) SubscribeCDBOper(path string) (*req.Resp, error)  {
 
 }
 
-
-func (com *NsoJsonRpcComet) SubscribeUpgrade() (*req.Resp, error)  {
+func (com *NsoJsonRpcComet) SubscribeUpgrade() (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": com.nsocon.id,
-		"method": "subscribe_upgrade",
+		"id":      com.nsocon.id,
+		"method":  "subscribe_upgrade",
 		"params": map[string]interface{}{
 			"comet_id": com.cometID,
-
 		},
 	}
 
@@ -263,7 +245,7 @@ func (com *NsoJsonRpcComet) SubscribeUpgrade() (*req.Resp, error)  {
 		return response, err
 	}
 
-	com.handles  = append(com.handles, newHandle)
+	com.handles = append(com.handles, newHandle)
 
 	response, err = com.startSubscription(newHandle)
 
@@ -275,15 +257,13 @@ func (com *NsoJsonRpcComet) SubscribeUpgrade() (*req.Resp, error)  {
 
 }
 
-
-func (com *NsoJsonRpcComet) SubscribeJSONRpcBatch() (*req.Resp, error)  {
+func (com *NsoJsonRpcComet) SubscribeJSONRpcBatch() (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": com.nsocon.id,
-		"method": "subscribe_jsonrpc_batch",
+		"id":      com.nsocon.id,
+		"method":  "subscribe_jsonrpc_batch",
 		"params": map[string]interface{}{
 			"comet_id": com.cometID,
-
 		},
 	}
 
@@ -301,7 +281,7 @@ func (com *NsoJsonRpcComet) SubscribeJSONRpcBatch() (*req.Resp, error)  {
 		return response, err
 	}
 
-	com.handles  = append(com.handles, newHandle)
+	com.handles = append(com.handles, newHandle)
 
 	response, err = com.startSubscription(newHandle)
 
@@ -313,13 +293,11 @@ func (com *NsoJsonRpcComet) SubscribeJSONRpcBatch() (*req.Resp, error)  {
 
 }
 
-
-
-func (com *NsoJsonRpcComet) GetSubscriptions() (*req.Resp, error)  {
+func (com *NsoJsonRpcComet) GetSubscriptions() (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": com.nsocon.id,
-		"method": "get_subscriptions",
+		"id":      com.nsocon.id,
+		"method":  "get_subscriptions",
 	}
 
 	response, err := com.nsocon.sendPost(param)
@@ -332,15 +310,13 @@ func (com *NsoJsonRpcComet) GetSubscriptions() (*req.Resp, error)  {
 
 }
 
-
-func (com *NsoJsonRpcComet) comet() (*req.Resp, error)  {
+func (com *NsoJsonRpcComet) comet() (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": com.nsocon.id,
-		"method": "comet",
+		"id":      com.nsocon.id,
+		"method":  "comet",
 		"params": map[string]interface{}{
 			"comet_id": com.cometID,
-
 		},
 	}
 
@@ -354,14 +330,13 @@ func (com *NsoJsonRpcComet) comet() (*req.Resp, error)  {
 
 }
 
-func (com *NsoJsonRpcComet) startSubscription(handle string) (*req.Resp, error)  {
+func (com *NsoJsonRpcComet) startSubscription(handle string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": com.nsocon.id,
-		"method": "start_subscription",
+		"id":      com.nsocon.id,
+		"method":  "start_subscription",
 		"params": map[string]interface{}{
 			"handle": handle,
-
 		},
 	}
 
@@ -373,18 +348,16 @@ func (com *NsoJsonRpcComet) startSubscription(handle string) (*req.Resp, error) 
 
 	return response, nil
 
-
 }
 
-func (com *NsoJsonRpcComet) unsubscribe() error  {
+func (com *NsoJsonRpcComet) unsubscribe() error {
 	for _, handle := range com.handles {
 		param := req.Param{
 			"jsonrpc": "2.0",
-			"id": com.nsocon.id,
-			"method": "unsubscribe",
+			"id":      com.nsocon.id,
+			"method":  "unsubscribe",
 			"params": map[string]interface{}{
 				"handle": handle,
-
 			},
 		}
 
@@ -400,7 +373,7 @@ func (com *NsoJsonRpcComet) unsubscribe() error  {
 
 }
 
-func (com *NsoJsonRpcComet) checkCometState(wantedState bool) error  {
+func (com *NsoJsonRpcComet) checkCometState(wantedState bool) error {
 
 	if com.cometStarted != wantedState {
 		if com.cometStarted == true {

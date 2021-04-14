@@ -18,15 +18,15 @@ START OF NSO Server connection
 // nsoJsonRpcHTTPConnection holds the connection data
 type nsoJsonRpcHTTPConnection struct {
 	protocol, ip, username, password string
-	port int
-	sslVerify bool
-	headers nsoRequestHeaders
+	port                             int
+	sslVerify                        bool
+	headers                          nsoRequestHeaders
 }
 
 // nsoRequestHeaders holds the common request headers
 type nsoRequestHeaders struct {
 	ContentType string `json:"Content-Type"`
-	Accept string `json:"Accept"`
+	Accept      string `json:"Accept"`
 }
 
 // Constructor to create a new newNsoJsonRpcHTTPConnection struct
@@ -36,7 +36,7 @@ type nsoRequestHeaders struct {
 //   :values username: A username
 //   :values password: A password
 //   :values sslVerify: true to verify SSL, false not to
-func newNsoJsonRpcHTTPConnection(protocol string, ip string, port int, username string, password string, sslVerify bool) (*nsoJsonRpcHTTPConnection, error)  {
+func newNsoJsonRpcHTTPConnection(protocol string, ip string, port int, username string, password string, sslVerify bool) (*nsoJsonRpcHTTPConnection, error) {
 
 	// Check if protocol is http, or https
 	if protocol == "http" || protocol == "https" {
@@ -101,9 +101,9 @@ START OF NSO JSON-Rpc Requester
 
 type nsoJsonConnection struct {
 	request *req.Req
-	id int
-	th float64
-	nsocon nsoJsonRpcHTTPConnection
+	id      int
+	th      float64
+	nsocon  nsoJsonRpcHTTPConnection
 }
 
 // Constructor to create a new newNsoJsonConnection struct
@@ -115,7 +115,7 @@ type nsoJsonConnection struct {
 //   :values sslVerify: true to verify SSL, false not to
 func newNsoJsonConnection(protocol string, ip string, port int, username string, password string, sslVerify bool) (*nsoJsonConnection, error) {
 	rand.Seed(int64(time.Now().Second()))
-	newId := rand.Intn(65000 - 1 + 1) + 1
+	newId := rand.Intn(65000-1+1) + 1
 
 	c, err := newNsoJsonRpcHTTPConnection(protocol, ip, port, username, password, sslVerify)
 
@@ -183,9 +183,9 @@ func (nsoJson *nsoJsonConnection) sendGet(param req.Param) (*req.Resp, error) {
 func (nsoJson *nsoJsonConnection) NsoLogin() error {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": nsoJson.id,
-		"method": "login",
-		"params": map[string]string{"user": nsoJson.nsocon.username, "passwd": nsoJson.nsocon.password},
+		"id":      nsoJson.id,
+		"method":  "login",
+		"params":  map[string]string{"user": nsoJson.nsocon.username, "passwd": nsoJson.nsocon.password},
 	}
 
 	request := req.New()
@@ -205,8 +205,8 @@ func (nsoJson *nsoJsonConnection) NsoLogin() error {
 func (nsoJson *nsoJsonConnection) NsoLogout() error {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": nsoJson.id,
-		"method": "logout",
+		"id":      nsoJson.id,
+		"method":  "logout",
 	}
 
 	response, _ := nsoJson.sendPost(param)
@@ -228,13 +228,13 @@ func (nsoJson *nsoJsonConnection) NsoLogout() error {
 func (nsoJson *nsoJsonConnection) NewTransaction(mode, confMode, tag, onPendingChanges string) error {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": nsoJson.id,
-		"method": "new_trans",
+		"id":      nsoJson.id,
+		"method":  "new_trans",
 		"params": map[string]string{
-			"db": "running",
-			"mode": mode,
-			"conf_mode": confMode,
-			"tag": tag,
+			"db":                 "running",
+			"mode":               mode,
+			"conf_mode":          confMode,
+			"tag":                tag,
 			"on_pending_changes": onPendingChanges,
 		},
 	}
@@ -255,8 +255,8 @@ func (nsoJson *nsoJsonConnection) NewTransaction(mode, confMode, tag, onPendingC
 func (nsoJson *nsoJsonConnection) GetTransaction() (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": nsoJson.id,
-		"method": "get_trans",
+		"id":      nsoJson.id,
+		"method":  "get_trans",
 	}
 
 	response, err := nsoJson.sendPost(param)
@@ -273,8 +273,8 @@ func (nsoJson *nsoJsonConnection) GetTransaction() (*req.Resp, error) {
 func (nsoJson *nsoJsonConnection) GetSystemSetting(operation string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": nsoJson.id,
-		"method": "get_system_setting",
+		"id":      nsoJson.id,
+		"method":  "get_system_setting",
 		"params": map[string]string{
 			"operation": operation,
 		},
@@ -294,8 +294,8 @@ func (nsoJson *nsoJsonConnection) GetSystemSetting(operation string) (*req.Resp,
 func (nsoJson *nsoJsonConnection) Abort(requestID int) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": nsoJson.id,
-		"method": "abort",
+		"id":      nsoJson.id,
+		"method":  "abort",
 		"params": map[string]int{
 			"id": requestID,
 		},
@@ -315,10 +315,10 @@ func (nsoJson *nsoJsonConnection) Abort(requestID int) (*req.Resp, error) {
 func (nsoJson *nsoJsonConnection) EvalXPATH(xpathExpression string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": nsoJson.id,
-		"method": "eval_xpath",
+		"id":      nsoJson.id,
+		"method":  "eval_xpath",
 		"params": map[string]interface{}{
-			"th": nsoJson.th,
+			"th":         nsoJson.th,
 			"xpath_expr": xpathExpression,
 		},
 	}

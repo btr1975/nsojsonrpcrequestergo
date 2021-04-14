@@ -6,17 +6,16 @@ import (
 )
 
 func Test_newNsoJsonRpcHTTPConnectionGoodParams(t *testing.T) {
-	scenarios := [] struct{
+	scenarios := []struct {
 		protocol, ip, username, password string
-		port int
-		sslVerify bool
-		headers nsoRequestHeaders
-		rcvError error
+		port                             int
+		sslVerify                        bool
+		headers                          nsoRequestHeaders
+		rcvError                         error
 	}{
 		{protocol: "http", ip: "192.168.1.1", port: 8080, username: "admin", password: "admin", sslVerify: false, rcvError: nil},
 		{protocol: "https", ip: "192.168.1.1", port: 443, username: "user", password: "pass", sslVerify: true, rcvError: nil},
 	}
-
 
 	for _, scenario := range scenarios {
 		tempStruct := &nsoJsonRpcHTTPConnection{
@@ -65,12 +64,12 @@ func Test_newNsoJsonRpcHTTPConnectionGoodParams(t *testing.T) {
 }
 
 func Test_newNsoJsonRpcHTTPConnectionBadParams(t *testing.T) {
-	scenarios := [] struct{
+	scenarios := []struct {
 		protocol, ip, username, password string
-		port int
-		sslVerify bool
-		headers nsoRequestHeaders
-		rcvError error
+		port                             int
+		sslVerify                        bool
+		headers                          nsoRequestHeaders
+		rcvError                         error
 	}{
 		{protocol: "ssh", ip: "192.168.1.1", port: 8080, username: "admin", password: "admin", sslVerify: false, rcvError: errors.New("only http, and https is supported")},
 		{protocol: "https", ip: "192.168.1.1000", port: 443, username: "user", password: "pass", sslVerify: true, rcvError: errors.New("not a valid IPv4 address")},
@@ -89,18 +88,17 @@ func Test_newNsoJsonRpcHTTPConnectionBadParams(t *testing.T) {
 			}
 		}
 
-
 	}
 
 }
 
 func Test_newNsoJsonRpcHTTPConnection_NsoUrl(t *testing.T) {
-	scenarios := [] struct{
+	scenarios := []struct {
 		protocol, ip, username, password string
-		port int
-		sslVerify bool
-		headers nsoRequestHeaders
-		expect string
+		port                             int
+		sslVerify                        bool
+		headers                          nsoRequestHeaders
+		expect                           string
 	}{
 		{protocol: "http", ip: "192.168.1.1", port: 8080, username: "admin", password: "admin", sslVerify: false, expect: "http://192.168.1.1:8080/jsonrpc"},
 		{protocol: "https", ip: "192.168.1.1", port: 443, username: "user", password: "pass", sslVerify: true, expect: "https://192.168.1.1:443/jsonrpc"},
@@ -122,12 +120,12 @@ func Test_newNsoJsonRpcHTTPConnection_NsoUrl(t *testing.T) {
 }
 
 func Test_newNsoJsonConnection(t *testing.T) {
-	scenarios := [] struct{
+	scenarios := []struct {
 		protocol, ip, username, password string
-		port int
-		sslVerify bool
-		headers nsoRequestHeaders
-		expect string
+		port                             int
+		sslVerify                        bool
+		headers                          nsoRequestHeaders
+		expect                           string
 	}{
 		{protocol: "http", ip: "192.168.1.1", port: 8080, username: "admin", password: "admin", sslVerify: false, expect: "http://192.168.1.1:8080/jsonrpc"},
 		{protocol: "https", ip: "192.168.1.1", port: 443, username: "user", password: "pass", sslVerify: true, expect: "https://192.168.1.1:443/jsonrpc"},
@@ -139,13 +137,13 @@ func Test_newNsoJsonConnection(t *testing.T) {
 	}
 }
 
-func Test_nsoJsonConnection_sendPost(* testing.T) {
-	scenarios := [] struct{
+func Test_nsoJsonConnection_sendPost(*testing.T) {
+	scenarios := []struct {
 		protocol, ip, username, password string
-		port int
-		sslVerify bool
-		headers nsoRequestHeaders
-		expect string
+		port                             int
+		sslVerify                        bool
+		headers                          nsoRequestHeaders
+		expect                           string
 	}{
 		{protocol: "http", ip: "192.168.1.1", port: 8080, username: "admin", password: "admin", sslVerify: false, expect: "http://192.168.1.1:8080/jsonrpc"},
 		{protocol: "https", ip: "192.168.1.1", port: 443, username: "user", password: "pass", sslVerify: true, expect: "https://192.168.1.1:443/jsonrpc"},
@@ -153,8 +151,6 @@ func Test_nsoJsonConnection_sendPost(* testing.T) {
 
 	for _, scenario := range scenarios {
 		_, _ = newNsoJsonConnection(scenario.protocol, scenario.ip, scenario.port, scenario.username, scenario.password, scenario.sslVerify)
-
-
 
 	}
 

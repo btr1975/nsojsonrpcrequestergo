@@ -6,9 +6,9 @@ import (
 )
 
 func TestIpV4Address(t *testing.T) {
-	scenarios := [] struct{
-		input string
-		expect string
+	scenarios := []struct {
+		input    string
+		expect   string
 		rcvError error
 	}{
 		{input: "192.168.1.1", expect: "192.168.1.1", rcvError: nil},
@@ -33,9 +33,9 @@ func TestIpV4Address(t *testing.T) {
 }
 
 func TestIpV4UnicastAddress(t *testing.T) {
-	scenarios := [] struct{
-		input string
-		expect string
+	scenarios := []struct {
+		input    string
+		expect   string
 		rcvError error
 	}{
 		{input: "192.168.1.1", expect: "192.168.1.1", rcvError: nil},
@@ -61,9 +61,9 @@ func TestIpV4UnicastAddress(t *testing.T) {
 }
 
 func TestIpV4MulticastAddress(t *testing.T) {
-	scenarios := [] struct{
-		input string
-		expect string
+	scenarios := []struct {
+		input    string
+		expect   string
 		rcvError error
 	}{
 		{input: "224.0.0.1", expect: "224.0.0.1", rcvError: nil},

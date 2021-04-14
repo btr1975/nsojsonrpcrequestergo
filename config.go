@@ -9,7 +9,6 @@ import (
 // NsoJsonRpcConfig holds a NSO JSON RPC config needs
 type NsoJsonRpcConfig struct {
 	nsocon nsoJsonConnection
-
 }
 
 // Constructor for a NsoJsonRpcConfig
@@ -19,7 +18,7 @@ type NsoJsonRpcConfig struct {
 //   :values username: A username
 //   :values password: A password
 //   :values sslVerify: true to verify SSL, false not to
-func NewNsoJsonRpcConfig(protocol string, ip string, port int, username string, password string, sslVerify bool) (*NsoJsonRpcConfig, error)  {
+func NewNsoJsonRpcConfig(protocol string, ip string, port int, username string, password string, sslVerify bool) (*NsoJsonRpcConfig, error) {
 
 	nsoJson, err := newNsoJsonConnection(protocol, ip, port, username, password, sslVerify)
 
@@ -124,15 +123,14 @@ func (config *NsoJsonRpcConfig) EvalXPATH(xpathExpression string) (*req.Resp, er
 func (config *NsoJsonRpcConfig) ShowConfig(path, resultAs string, withOper bool, maxSize int) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "show_config",
+		"id":      config.nsocon.id,
+		"method":  "show_config",
 		"params": map[string]interface{}{
-			"th": config.nsocon.th,
-			"path": path,
+			"th":        config.nsocon.th,
+			"path":      path,
 			"result_as": resultAs,
 			"with_oper": withOper,
-			"max_size": maxSize,
-
+			"max_size":  maxSize,
 		},
 	}
 
@@ -151,13 +149,12 @@ func (config *NsoJsonRpcConfig) ShowConfig(path, resultAs string, withOper bool,
 func (config *NsoJsonRpcConfig) Deref(path, resultAs string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "deref",
+		"id":      config.nsocon.id,
+		"method":  "deref",
 		"params": map[string]interface{}{
-			"th": config.nsocon.th,
-			"path": path,
+			"th":        config.nsocon.th,
+			"path":      path,
 			"result_as": resultAs,
-
 		},
 	}
 
@@ -177,14 +174,13 @@ func (config *NsoJsonRpcConfig) Deref(path, resultAs string) (*req.Resp, error) 
 func (config *NsoJsonRpcConfig) GetLeafrefValues(path string, skipGrouping bool, keys []string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "get_leafref_values",
+		"id":      config.nsocon.id,
+		"method":  "get_leafref_values",
 		"params": map[string]interface{}{
-			"th": config.nsocon.th,
-			"path": path,
+			"th":            config.nsocon.th,
+			"path":          path,
 			"skip_grouping": skipGrouping,
-			"keys": keys,
-
+			"keys":          keys,
 		},
 	}
 
@@ -203,13 +199,12 @@ func (config *NsoJsonRpcConfig) GetLeafrefValues(path string, skipGrouping bool,
 func (config *NsoJsonRpcConfig) RunAction(path string, inputData map[string]interface{}) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "run_action",
+		"id":      config.nsocon.id,
+		"method":  "run_action",
 		"params": map[string]interface{}{
-			"th": config.nsocon.th,
-			"path": path,
+			"th":     config.nsocon.th,
+			"path":   path,
 			"params": inputData,
-
 		},
 	}
 
@@ -227,12 +222,11 @@ func (config *NsoJsonRpcConfig) RunAction(path string, inputData map[string]inte
 func (config *NsoJsonRpcConfig) GetSchema(path string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "get_schema",
+		"id":      config.nsocon.id,
+		"method":  "get_schema",
 		"params": map[string]interface{}{
-			"th": config.nsocon.th,
+			"th":   config.nsocon.th,
 			"path": path,
-
 		},
 	}
 
@@ -250,12 +244,11 @@ func (config *NsoJsonRpcConfig) GetSchema(path string) (*req.Resp, error) {
 func (config *NsoJsonRpcConfig) GetListKeys(path string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "get_list_keys",
+		"id":      config.nsocon.id,
+		"method":  "get_list_keys",
 		"params": map[string]interface{}{
-			"th": config.nsocon.th,
+			"th":   config.nsocon.th,
 			"path": path,
-
 		},
 	}
 
@@ -274,13 +267,12 @@ func (config *NsoJsonRpcConfig) GetListKeys(path string) (*req.Resp, error) {
 func (config *NsoJsonRpcConfig) GetValue(path string, checkDefault bool) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "get_value",
+		"id":      config.nsocon.id,
+		"method":  "get_value",
 		"params": map[string]interface{}{
-			"th": config.nsocon.th,
-			"path": path,
+			"th":            config.nsocon.th,
+			"path":          path,
 			"check_default": checkDefault,
-
 		},
 	}
 
@@ -300,14 +292,13 @@ func (config *NsoJsonRpcConfig) GetValue(path string, checkDefault bool) (*req.R
 func (config *NsoJsonRpcConfig) GetValues(path string, leafs []string, checkDefault bool) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "get_values",
+		"id":      config.nsocon.id,
+		"method":  "get_values",
 		"params": map[string]interface{}{
-			"th": config.nsocon.th,
-			"path": path,
+			"th":            config.nsocon.th,
+			"path":          path,
 			"check_default": checkDefault,
-			"leafs": leafs,
-
+			"leafs":         leafs,
 		},
 	}
 
@@ -325,12 +316,11 @@ func (config *NsoJsonRpcConfig) GetValues(path string, leafs []string, checkDefa
 func (config *NsoJsonRpcConfig) Create(path string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "create",
+		"id":      config.nsocon.id,
+		"method":  "create",
 		"params": map[string]interface{}{
-			"th": config.nsocon.th,
+			"th":   config.nsocon.th,
 			"path": path,
-
 		},
 	}
 
@@ -343,18 +333,16 @@ func (config *NsoJsonRpcConfig) Create(path string) (*req.Resp, error) {
 	return response, nil
 }
 
-
 // Method to check if a leaf exists
 //   :values path: A key path
 func (config *NsoJsonRpcConfig) Exists(path string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "exists",
+		"id":      config.nsocon.id,
+		"method":  "exists",
 		"params": map[string]interface{}{
-			"th": config.nsocon.th,
+			"th":   config.nsocon.th,
 			"path": path,
-
 		},
 	}
 
@@ -373,13 +361,12 @@ func (config *NsoJsonRpcConfig) Exists(path string) (*req.Resp, error) {
 func (config *NsoJsonRpcConfig) GetCase(path, choice string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "get_case",
+		"id":      config.nsocon.id,
+		"method":  "get_case",
 		"params": map[string]interface{}{
-			"th": config.nsocon.th,
-			"path": path,
+			"th":     config.nsocon.th,
+			"path":   path,
 			"choice": choice,
-
 		},
 	}
 
@@ -400,15 +387,14 @@ func (config *NsoJsonRpcConfig) GetCase(path, choice string) (*req.Resp, error) 
 func (config *NsoJsonRpcConfig) Load(data, path, dataFormat, mode string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "load",
+		"id":      config.nsocon.id,
+		"method":  "load",
 		"params": map[string]interface{}{
-			"th": config.nsocon.th,
-			"data": data,
-			"path": path,
+			"th":     config.nsocon.th,
+			"data":   data,
+			"path":   path,
 			"format": dataFormat,
-			"mode": mode,
-
+			"mode":   mode,
 		},
 	}
 
@@ -428,14 +414,13 @@ func (config *NsoJsonRpcConfig) Load(data, path, dataFormat, mode string) (*req.
 func (config *NsoJsonRpcConfig) SetValue(path string, value interface{}, dryRun bool) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "set_value",
+		"id":      config.nsocon.id,
+		"method":  "set_value",
 		"params": map[string]interface{}{
-			"th": config.nsocon.th,
-			"path": path,
-			"value": value,
+			"th":     config.nsocon.th,
+			"path":   path,
+			"value":  value,
 			"dryrun": dryRun,
-
 		},
 	}
 
@@ -454,11 +439,10 @@ func (config *NsoJsonRpcConfig) SetValue(path string, value interface{}, dryRun 
 func (config *NsoJsonRpcConfig) ValidateCommit() (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "validate_commit",
+		"id":      config.nsocon.id,
+		"method":  "validate_commit",
 		"params": map[string]interface{}{
 			"th": config.nsocon.th,
-
 		},
 	}
 
@@ -489,12 +473,11 @@ func (config *NsoJsonRpcConfig) Commit(dryRun bool, output string, reverse bool)
 
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "commit",
+		"id":      config.nsocon.id,
+		"method":  "commit",
 		"params": map[string]interface{}{
-			"th": config.nsocon.th,
+			"th":    config.nsocon.th,
 			"flags": flags,
-
 		},
 	}
 
@@ -512,12 +495,11 @@ func (config *NsoJsonRpcConfig) Commit(dryRun bool, output string, reverse bool)
 func (config *NsoJsonRpcConfig) Delete(path string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "delete",
+		"id":      config.nsocon.id,
+		"method":  "delete",
 		"params": map[string]interface{}{
-			"th": config.nsocon.th,
+			"th":   config.nsocon.th,
 			"path": path,
-
 		},
 	}
 
@@ -534,8 +516,8 @@ func (config *NsoJsonRpcConfig) Delete(path string) (*req.Resp, error) {
 func (config *NsoJsonRpcConfig) GetServicePoints() (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "get_service_points",
+		"id":      config.nsocon.id,
+		"method":  "get_service_points",
 	}
 
 	response, err := config.nsocon.sendPost(param)
@@ -553,12 +535,11 @@ func (config *NsoJsonRpcConfig) GetServicePoints() (*req.Resp, error) {
 func (config *NsoJsonRpcConfig) GetTemplateVariables(name string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "get_template_variables",
+		"id":      config.nsocon.id,
+		"method":  "get_template_variables",
 		"params": map[string]interface{}{
-			"th": config.nsocon.th,
+			"th":   config.nsocon.th,
 			"name": name,
-
 		},
 	}
 
@@ -581,13 +562,12 @@ func (config *NsoJsonRpcConfig) GetTemplateVariables(name string) (*req.Resp, er
 func (config *NsoJsonRpcConfig) Query(xpathExpression, resultAs string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "query",
+		"id":      config.nsocon.id,
+		"method":  "query",
 		"params": map[string]interface{}{
-			"th": config.nsocon.th,
+			"th":         config.nsocon.th,
 			"xpath_expr": xpathExpression,
-			"result_as": resultAs,
-
+			"result_as":  resultAs,
 		},
 	}
 
@@ -602,11 +582,11 @@ func (config *NsoJsonRpcConfig) Query(xpathExpression, resultAs string) (*req.Re
 
 // QueryObject contains a compext query structure
 type QueryObject struct {
-	xpathExpression, path, sortOrder, contextNode, resultAs  string
-	selection, sort []string
-	chunkSize, initialOffset int
-	includeTotal bool
-	qh float64
+	xpathExpression, path, sortOrder, contextNode, resultAs string
+	selection, sort                                         []string
+	chunkSize, initialOffset                                int
+	includeTotal                                            bool
+	qh                                                      float64
 }
 
 // Constructor for a QueryObject
@@ -621,7 +601,7 @@ type QueryObject struct {
 //   :values includeTotal: true to include total records, false to not
 //   :values contextNode: A keypath optional use "" to not use
 //   :values resultAs: string, keypath-value, or leaf_value_as_string
-func NewQueryObject (xpathExpression, path string, selection []string, chunkSize, initialOffset int, sort []string, sortOrder string, includeTotal bool, contextNode, resultAs string) (*QueryObject, error) {
+func NewQueryObject(xpathExpression, path string, selection []string, chunkSize, initialOffset int, sort []string, sortOrder string, includeTotal bool, contextNode, resultAs string) (*QueryObject, error) {
 	var expression, usepath string
 
 	if xpathExpression != "" {
@@ -672,9 +652,9 @@ func (config *NsoJsonRpcConfig) StartQuery(queryObject *QueryObject) error {
 
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "start_query",
-		"params": params,
+		"id":      config.nsocon.id,
+		"method":  "start_query",
+		"params":  params,
 	}
 
 	response, err := config.nsocon.sendPost(param)
@@ -694,8 +674,8 @@ func (config *NsoJsonRpcConfig) StartQuery(queryObject *QueryObject) error {
 func (config *NsoJsonRpcConfig) RunQuery(queryObject *QueryObject) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "run_query",
+		"id":      config.nsocon.id,
+		"method":  "run_query",
 		"params": map[string]interface{}{
 			"qh": queryObject.qh,
 		},
@@ -715,8 +695,8 @@ func (config *NsoJsonRpcConfig) RunQuery(queryObject *QueryObject) (*req.Resp, e
 func (config *NsoJsonRpcConfig) ResetQuery(queryObject *QueryObject) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "reset_query",
+		"id":      config.nsocon.id,
+		"method":  "reset_query",
 		"params": map[string]interface{}{
 			"qh": queryObject.qh,
 		},
@@ -731,14 +711,13 @@ func (config *NsoJsonRpcConfig) ResetQuery(queryObject *QueryObject) (*req.Resp,
 	return response, nil
 }
 
-
 // Method to stop a complex query
 //   :values queryHandle: A Query Handle this comes from using the StartQuery method
 func (config *NsoJsonRpcConfig) StopQuery(queryObject *QueryObject) error {
 	param := req.Param{
 		"jsonrpc": "2.0",
-		"id": config.nsocon.id,
-		"method": "stop_query",
+		"id":      config.nsocon.id,
+		"method":  "stop_query",
 		"params": map[string]interface{}{
 			"qh": queryObject.qh,
 		},
