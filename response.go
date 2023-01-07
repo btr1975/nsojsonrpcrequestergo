@@ -24,7 +24,8 @@ func NewNsoJsonResponse() *NsoJsonResponse {
 }
 
 // Method to convert JSON Response Body to a map
-//   :values response: *req.Resp
+//
+//	:values response: *req.Resp
 func (r *NsoJsonResponse) ResponseToStruct(response *req.Resp) (*NsoJsonResponse, error) {
 	err := response.ToJSON(&r)
 
@@ -37,7 +38,8 @@ func (r *NsoJsonResponse) ResponseToStruct(response *req.Resp) (*NsoJsonResponse
 }
 
 // Method to get the transaction handle
-//   :values response: *req.Resp
+//
+//	:values response: *req.Resp
 func (r *NsoJsonResponse) GetTransactionHandle(response *req.Resp) float64 {
 	var th float64
 
@@ -55,7 +57,8 @@ func (r *NsoJsonResponse) GetTransactionHandle(response *req.Resp) float64 {
 }
 
 // Method to get the query handle
-//   :values response: *req.Resp
+//
+//	:values response: *req.Resp
 func (r *NsoJsonResponse) GetQueryHandle(response *req.Resp) float64 {
 	var qh float64
 
@@ -73,7 +76,8 @@ func (r *NsoJsonResponse) GetQueryHandle(response *req.Resp) float64 {
 }
 
 // Method to convert the query results string to a array
-//   :values result: result string from query
+//
+//	:values result: result string from query
 func (r *NsoJsonResponse) fixQueryResults(result string) []string {
 	remLeftDblBracket := strings.Replace(result, "[[", "", -1)
 	remRightDblBracket := strings.Replace(remLeftDblBracket, "]]", "", -1)
@@ -83,7 +87,8 @@ func (r *NsoJsonResponse) fixQueryResults(result string) []string {
 }
 
 // Method to get the query results
-//   :values response: *req.Resp
+//
+//	:values response: *req.Resp
 func (r *NsoJsonResponse) GetQueryResults(response *req.Resp) ([]string, error) {
 	_, err := r.ResponseToStruct(response)
 	if err != nil {
@@ -102,7 +107,8 @@ func (r *NsoJsonResponse) GetQueryResults(response *req.Resp) ([]string, error) 
 }
 
 // Method to get the comet handle
-//   :values response: *req.Resp
+//
+//	:values response: *req.Resp
 func (r *NsoJsonResponse) GetCometHandle(response *req.Resp) (string, error) {
 	_, err := r.ResponseToStruct(response)
 
