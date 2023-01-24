@@ -17,12 +17,12 @@ type NsoJsonRpcComet struct {
 
 // Constructor for a NsoJsonRpcComet
 //
-//	:values protocol: http, https
-//	:values ip: a IPv4 address, or a CNAME
-//	:values port: 1 to 65535
-//	:values username: A username
-//	:values password: A password
-//	:values sslVerify: true to verify SSL, false not to
+//	:param protocol: http, https
+//	:param ip: a IPv4 address, or a CNAME
+//	:param port: 1 to 65535
+//	:param username: A username
+//	:param password: A password
+//	:param sslVerify: true to verify SSL, false not to
 func NewNsoJsonRpcComet(protocol string, ip string, port int, username string, password string, sslVerify bool) (*NsoJsonRpcComet, error) {
 	cometID := fmt.Sprintf("remote-comet-%d", rand.Intn(65000-1+1)+1)
 

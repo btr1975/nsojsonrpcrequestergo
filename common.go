@@ -31,12 +31,12 @@ type nsoRequestHeaders struct {
 
 // Constructor to create a new newNsoJsonRpcHTTPConnection struct
 //
-//	:values protocol: http, https
-//	:values ip: a IPv4 address, or a CNAME
-//	:values port: 1 to 65535
-//	:values username: A username
-//	:values password: A password
-//	:values sslVerify: true to verify SSL, false not to
+//	:param protocol: http, https
+//	:param ip: a IPv4 address, or a CNAME
+//	:param port: 1 to 65535
+//	:param username: A username
+//	:param password: A password
+//	:param sslVerify: true to verify SSL, false not to
 func newNsoJsonRpcHTTPConnection(protocol string, ip string, port int, username string, password string, sslVerify bool) (*nsoJsonRpcHTTPConnection, error) {
 
 	// Check if protocol is http, or https
@@ -109,12 +109,12 @@ type nsoJsonConnection struct {
 
 // Constructor to create a new newNsoJsonConnection struct
 //
-//	:values protocol: http, https
-//	:values ip: a IPv4 address, or a CNAME
-//	:values port: 1 to 65535
-//	:values username: A username
-//	:values password: A password
-//	:values sslVerify: true to verify SSL, false not to
+//	:param protocol: http, https
+//	:param ip: a IPv4 address, or a CNAME
+//	:param port: 1 to 65535
+//	:param username: A username
+//	:param password: A password
+//	:param sslVerify: true to verify SSL, false not to
 func newNsoJsonConnection(protocol string, ip string, port int, username string, password string, sslVerify bool) (*nsoJsonConnection, error) {
 	rand.Seed(int64(time.Now().Second()))
 	newId := rand.Intn(65000-1+1) + 1
@@ -131,7 +131,7 @@ func newNsoJsonConnection(protocol string, ip string, port int, username string,
 
 // Method to convert the NsoJsonRequest to a bytes.Buffer for transport
 //
-//	:values param: A req.Param
+//	:param param: A req.Param
 func (nsoJson *nsoJsonConnection) getJsonRequest(param req.Param) *bytes.Buffer {
 
 	jsonData, _ := json.Marshal(param)
@@ -142,7 +142,7 @@ func (nsoJson *nsoJsonConnection) getJsonRequest(param req.Param) *bytes.Buffer 
 
 // Method to send a POST request
 //
-//	:values param: A req.Param
+//	:param param: A req.Param
 func (nsoJson *nsoJsonConnection) sendPost(param req.Param) (*req.Resp, error) {
 	if nsoJson.nsocon.sslVerify == true {
 		nsoJson.request.EnableInsecureTLS(false)
@@ -164,7 +164,7 @@ func (nsoJson *nsoJsonConnection) sendPost(param req.Param) (*req.Resp, error) {
 
 // Method to send a GET request
 //
-//	:values param: A req.Param
+//	:param param: A req.Param
 func (nsoJson *nsoJsonConnection) sendGet(param req.Param) (*req.Resp, error) {
 	if nsoJson.nsocon.sslVerify == true {
 		nsoJson.request.EnableInsecureTLS(false)
@@ -227,10 +227,10 @@ func (nsoJson *nsoJsonConnection) NsoLogout() error {
 
 // Method to start a new NSO Transaction
 //
-//	:values mode: read, or read_write
-//	:values confMode: private, shared, or exclusive
-//	:values tag: "" or a value
-//	:values onPendingChanges: reuse, reject, or discard
+//	:param mode: read, or read_write
+//	:param confMode: private, shared, or exclusive
+//	:param tag: "" or a value
+//	:param onPendingChanges: reuse, reject, or discard
 func (nsoJson *nsoJsonConnection) NewTransaction(mode, confMode, tag, onPendingChanges string) error {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -276,7 +276,7 @@ func (nsoJson *nsoJsonConnection) GetTransaction() (*req.Resp, error) {
 
 // Method to get NSO system settings
 //
-//	:values operation: capabilities, customizations , models, user, version, or all
+//	:param operation: capabilities, customizations , models, user, version, or all
 func (nsoJson *nsoJsonConnection) GetSystemSetting(operation string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -298,7 +298,7 @@ func (nsoJson *nsoJsonConnection) GetSystemSetting(operation string) (*req.Resp,
 
 // Method to abort a request-id
 //
-//	:values requestID: An id
+//	:param requestID: An id
 func (nsoJson *nsoJsonConnection) Abort(requestID int) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -320,7 +320,7 @@ func (nsoJson *nsoJsonConnection) Abort(requestID int) (*req.Resp, error) {
 
 // Method to evaluate a xpath expression
 //
-//	:values xpathExpression: An xpath expression
+//	:param xpathExpression: An xpath expression
 func (nsoJson *nsoJsonConnection) EvalXPATH(xpathExpression string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",

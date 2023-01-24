@@ -7,7 +7,7 @@ import (
 
 // IpV4Address verifies if a given string a IPv4 Address
 //
-//	:values address: The address to verify
+//	:param address: The address to verify
 func IpV4Address(address string) (string, error) {
 	// Convert ip to a IPv4 Address if possible
 	ipv4address := net.ParseIP(address)
@@ -24,7 +24,7 @@ func IpV4Address(address string) (string, error) {
 
 // IpV4UnicastAddress verifies if a net.IP is a IPv4 Unicast address
 //
-//	:values address: The address to verify
+//	:param address: The address to verify
 func IpV4UnicastAddress(address string) (string, error) {
 	_, err := IpV4Address(address)
 
@@ -46,7 +46,7 @@ func IpV4UnicastAddress(address string) (string, error) {
 
 // IpV4MulticastAddress verifies if a net.IP is a IPv4 Multicast address
 //
-//	:values address: The address to verify
+//	:param address: The address to verify
 func IpV4MulticastAddress(address string) (string, error) {
 	_, err := IpV4Address(address)
 

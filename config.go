@@ -13,12 +13,12 @@ type NsoJsonRpcConfig struct {
 
 // Constructor for a NsoJsonRpcConfig
 //
-//	:values protocol: http, https
-//	:values ip: a IPv4 address, or a CNAME
-//	:values port: 1 to 65535
-//	:values username: A username
-//	:values password: A password
-//	:values sslVerify: true to verify SSL, false not to
+//	:param protocol: http, https
+//	:param ip: a IPv4 address, or a CNAME
+//	:param port: 1 to 65535
+//	:param username: A username
+//	:param password: A password
+//	:param sslVerify: true to verify SSL, false not to
 func NewNsoJsonRpcConfig(protocol string, ip string, port int, username string, password string, sslVerify bool) (*NsoJsonRpcConfig, error) {
 
 	nsoJson, err := newNsoJsonConnection(protocol, ip, port, username, password, sslVerify)
@@ -56,10 +56,10 @@ func (config *NsoJsonRpcConfig) NsoLogout() error {
 
 // Method to start a new NSO Transaction
 //
-//	:values mode: read, or read_write
-//	:values confMode: private, shared, or exclusive
-//	:values tag: "" or a value
-//	:values onPendingChanges: reuse, reject, or discard
+//	:param mode: read, or read_write
+//	:param confMode: private, shared, or exclusive
+//	:param tag: "" or a value
+//	:param onPendingChanges: reuse, reject, or discard
 func (config *NsoJsonRpcConfig) NewTransaction(mode, confMode, tag, onPendingChanges string) error {
 	err := config.nsocon.NewTransaction(mode, confMode, tag, onPendingChanges)
 
@@ -83,7 +83,7 @@ func (config *NsoJsonRpcConfig) GetTransaction() (*req.Resp, error) {
 
 // Method to get NSO system settings
 //
-//	:values operation: capabilities, customizations , models, user, version, or all
+//	:param operation: capabilities, customizations , models, user, version, or all
 func (config *NsoJsonRpcConfig) GetSystemSetting(operation string) (*req.Resp, error) {
 	response, err := config.nsocon.GetSystemSetting(operation)
 
@@ -96,7 +96,7 @@ func (config *NsoJsonRpcConfig) GetSystemSetting(operation string) (*req.Resp, e
 
 // Method to abort a request-id
 //
-//	:values requestID: An id
+//	:param requestID: An id
 func (config *NsoJsonRpcConfig) Abort(requestID int) (*req.Resp, error) {
 	response, err := config.nsocon.Abort(requestID)
 
@@ -109,7 +109,7 @@ func (config *NsoJsonRpcConfig) Abort(requestID int) (*req.Resp, error) {
 
 // Method to evaluate a xpath expression
 //
-//	:values xpathExpression: An xpath expression
+//	:param xpathExpression: An xpath expression
 func (config *NsoJsonRpcConfig) EvalXPATH(xpathExpression string) (*req.Resp, error) {
 	response, err := config.nsocon.EvalXPATH(xpathExpression)
 
@@ -122,10 +122,10 @@ func (config *NsoJsonRpcConfig) EvalXPATH(xpathExpression string) (*req.Resp, er
 
 // Method to show NSO config
 //
-//	:values path: A key path
-//	:values resultAs: string, or json
-//	:values withOper: true for operational data false for not
-//	:values maxSize: 0 to disable limit any other number to limit
+//	:param path: A key path
+//	:param resultAs: string, or json
+//	:param withOper: true for operational data false for not
+//	:param maxSize: 0 to disable limit any other number to limit
 func (config *NsoJsonRpcConfig) ShowConfig(path, resultAs string, withOper bool, maxSize int) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -151,8 +151,8 @@ func (config *NsoJsonRpcConfig) ShowConfig(path, resultAs string, withOper bool,
 
 // Method to deref NSO config
 //
-//	:values path: A key path
-//	:values resultAs: paths, target, or list-target
+//	:param path: A key path
+//	:param resultAs: paths, target, or list-target
 func (config *NsoJsonRpcConfig) Deref(path, resultAs string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -176,9 +176,9 @@ func (config *NsoJsonRpcConfig) Deref(path, resultAs string) (*req.Resp, error) 
 
 // Method to get leaf reference values
 //
-//	:values path: A key path
-//	:values skipGrouping: true to skip grouping false to not
-//	:values keys: array of keys
+//	:param path: A key path
+//	:param skipGrouping: true to skip grouping false to not
+//	:param keys: array of keys
 func (config *NsoJsonRpcConfig) GetLeafrefValues(path string, skipGrouping bool, keys []string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -203,8 +203,8 @@ func (config *NsoJsonRpcConfig) GetLeafrefValues(path string, skipGrouping bool,
 
 // Method to run an action
 //
-//	:values path: A key path
-//	:values inputData: A map of data
+//	:param path: A key path
+//	:param inputData: A map of data
 func (config *NsoJsonRpcConfig) RunAction(path string, inputData map[string]interface{}) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -228,7 +228,7 @@ func (config *NsoJsonRpcConfig) RunAction(path string, inputData map[string]inte
 
 // Method to get a schema
 //
-//	:values path: A key path
+//	:param path: A key path
 func (config *NsoJsonRpcConfig) GetSchema(path string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -251,7 +251,7 @@ func (config *NsoJsonRpcConfig) GetSchema(path string) (*req.Resp, error) {
 
 // Method to get a list of keys
 //
-//	:values path: A key path
+//	:param path: A key path
 func (config *NsoJsonRpcConfig) GetListKeys(path string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -274,8 +274,8 @@ func (config *NsoJsonRpcConfig) GetListKeys(path string) (*req.Resp, error) {
 
 // Method to get a leaf value
 //
-//	:values path: A key path
-//	:values checkDefault: true to check for default value false to not
+//	:param path: A key path
+//	:param checkDefault: true to check for default value false to not
 func (config *NsoJsonRpcConfig) GetValue(path string, checkDefault bool) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -299,9 +299,9 @@ func (config *NsoJsonRpcConfig) GetValue(path string, checkDefault bool) (*req.R
 
 // Method to get multiple leaf values
 //
-//	:values path: A key path
-//	:values leafs: A array of leafs
-//	:values checkDefault: true to check for default value false to not
+//	:param path: A key path
+//	:param leafs: A array of leafs
+//	:param checkDefault: true to check for default value false to not
 func (config *NsoJsonRpcConfig) GetValues(path string, leafs []string, checkDefault bool) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -326,7 +326,7 @@ func (config *NsoJsonRpcConfig) GetValues(path string, leafs []string, checkDefa
 
 // Method to create a leaf
 //
-//	:values path: A key path
+//	:param path: A key path
 func (config *NsoJsonRpcConfig) Create(path string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -349,7 +349,7 @@ func (config *NsoJsonRpcConfig) Create(path string) (*req.Resp, error) {
 
 // Method to check if a leaf exists
 //
-//	:values path: A key path
+//	:param path: A key path
 func (config *NsoJsonRpcConfig) Exists(path string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -372,8 +372,8 @@ func (config *NsoJsonRpcConfig) Exists(path string) (*req.Resp, error) {
 
 // Method to get a choice/case
 //
-//	:values path: A key path
-//	:values choice: A choice from a case
+//	:param path: A key path
+//	:param choice: A choice from a case
 func (config *NsoJsonRpcConfig) GetCase(path, choice string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -397,10 +397,10 @@ func (config *NsoJsonRpcConfig) GetCase(path, choice string) (*req.Resp, error) 
 
 // Method to load data to NSO
 //
-//	:values data: The data to be loaded
-//	:values path: A key path use "/" at the very least
-//	:values dataFormat: json, or xml
-//	:values mode: create, merge, or replace
+//	:param data: The data to be loaded
+//	:param path: A key path use "/" at the very least
+//	:param dataFormat: json, or xml
+//	:param mode: create, merge, or replace
 func (config *NsoJsonRpcConfig) Load(data, path, dataFormat, mode string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -426,9 +426,9 @@ func (config *NsoJsonRpcConfig) Load(data, path, dataFormat, mode string) (*req.
 
 // Method to set a value
 //
-//	:values path: A key path
-//	:values value: What you want to set
-//	:values dryRun: true for dryrun false for not
+//	:param path: A key path
+//	:param value: What you want to set
+//	:param dryRun: true for dryrun false for not
 func (config *NsoJsonRpcConfig) SetValue(path string, value interface{}, dryRun bool) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -476,9 +476,9 @@ func (config *NsoJsonRpcConfig) ValidateCommit() (*req.Resp, error) {
 
 // Method to commit
 //
-//	:values dryRun: true for dryrun false for not
-//	:values output: cli, native, or xml
-//	:values reverse: true for reverse diff false for forward diff
+//	:param dryRun: true for dryrun false for not
+//	:param output: cli, native, or xml
+//	:param reverse: true for reverse diff false for forward diff
 //	                 config only can be used with native
 func (config *NsoJsonRpcConfig) Commit(dryRun bool, output string, reverse bool) (*req.Resp, error) {
 	var flags []string = nil
@@ -512,7 +512,7 @@ func (config *NsoJsonRpcConfig) Commit(dryRun bool, output string, reverse bool)
 
 // Method to delete a path
 //
-//	:values path: A key path
+//	:param path: A key path
 func (config *NsoJsonRpcConfig) Delete(path string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -553,7 +553,7 @@ func (config *NsoJsonRpcConfig) GetServicePoints() (*req.Resp, error) {
 // Method to get template variables
 // This is not xml template variables it is templates in NSO
 //
-//	:values name: The name of the template
+//	:param name: The name of the template
 func (config *NsoJsonRpcConfig) GetTemplateVariables(name string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -580,8 +580,8 @@ func (config *NsoJsonRpcConfig) GetTemplateVariables(name string) (*req.Resp, er
 // results, as it results in performance degradation - use start_query, multiple
 // run_query and stop_query instead.
 //
-//	:values xpathExpression: A XPATH expression
-//	:values resultAs: string, keypath-value, or leaf_value_as_string
+//	:param xpathExpression: A XPATH expression
+//	:param resultAs: string, keypath-value, or leaf_value_as_string
 func (config *NsoJsonRpcConfig) Query(xpathExpression, resultAs string) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -615,16 +615,16 @@ type QueryObject struct {
 // Constructor for a QueryObject
 // If xpathExpression is defined path will be ignored
 //
-//	:values xpathExpression: A XPATH expression or leave blank to use a keypath instead
-//	:values path: A keypath epression
-//	:values selection: An array of leaf selections use empty array at your own risk
-//	:values chunkSize: If set to 0 all data is returned, any other value will break data into chunks
-//	:values initialOffset: If set to 0 thing is done any other value sets the offset
-//	:values sort: Array of XPATH expressions use a blank array to not use
-//	:values sortOrder: ascending, or descending "" to not use
-//	:values includeTotal: true to include total records, false to not
-//	:values contextNode: A keypath optional use "" to not use
-//	:values resultAs: string, keypath-value, or leaf_value_as_string
+//	:param xpathExpression: A XPATH expression or leave blank to use a keypath instead
+//	:param path: A keypath epression
+//	:param selection: An array of leaf selections use empty array at your own risk
+//	:param chunkSize: If set to 0 all data is returned, any other value will break data into chunks
+//	:param initialOffset: If set to 0 thing is done any other value sets the offset
+//	:param sort: Array of XPATH expressions use a blank array to not use
+//	:param sortOrder: ascending, or descending "" to not use
+//	:param includeTotal: true to include total records, false to not
+//	:param contextNode: A keypath optional use "" to not use
+//	:param resultAs: string, keypath-value, or leaf_value_as_string
 func NewQueryObject(xpathExpression, path string, selection []string, chunkSize, initialOffset int, sort []string, sortOrder string, includeTotal bool, contextNode, resultAs string) (*QueryObject, error) {
 	var expression, usepath string
 
@@ -696,7 +696,7 @@ func (config *NsoJsonRpcConfig) StartQuery(queryObject *QueryObject) error {
 
 // Method to run a complex query
 //
-//	:values queryHandle: A Query Handle this comes from using the StartQuery method
+//	:param queryHandle: A Query Handle this comes from using the StartQuery method
 func (config *NsoJsonRpcConfig) RunQuery(queryObject *QueryObject) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -718,7 +718,7 @@ func (config *NsoJsonRpcConfig) RunQuery(queryObject *QueryObject) (*req.Resp, e
 
 // Method to reset a complex query
 //
-//	:values queryHandle: A Query Handle this comes from using the StartQuery method
+//	:param queryHandle: A Query Handle this comes from using the StartQuery method
 func (config *NsoJsonRpcConfig) ResetQuery(queryObject *QueryObject) (*req.Resp, error) {
 	param := req.Param{
 		"jsonrpc": "2.0",
@@ -740,7 +740,7 @@ func (config *NsoJsonRpcConfig) ResetQuery(queryObject *QueryObject) (*req.Resp,
 
 // Method to stop a complex query
 //
-//	:values queryHandle: A Query Handle this comes from using the StartQuery method
+//	:param queryHandle: A Query Handle this comes from using the StartQuery method
 func (config *NsoJsonRpcConfig) StopQuery(queryObject *QueryObject) error {
 	param := req.Param{
 		"jsonrpc": "2.0",
