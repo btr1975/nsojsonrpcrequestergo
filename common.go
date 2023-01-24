@@ -81,12 +81,12 @@ func newNsoJsonRpcHTTPConnection(protocol string, ip string, port int, username 
 
 }
 
-// Method to get the NSO JsonRPC URL
+// NsoUrl get the NSO JsonRPC URL
 func (c *nsoJsonRpcHTTPConnection) NsoUrl() string {
 	return fmt.Sprintf("%s://%s:%d/jsonrpc", c.protocol, c.ip, c.port)
 }
 
-// Method to get the NSO Headers
+// NsoHeaders get the NSO Headers
 func (c *nsoJsonRpcHTTPConnection) NsoHeaders() *nsoRequestHeaders {
 	return &c.headers
 

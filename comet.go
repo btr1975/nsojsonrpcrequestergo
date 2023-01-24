@@ -15,7 +15,7 @@ type NsoJsonRpcComet struct {
 	handles      []string
 }
 
-// Constructor for a NsoJsonRpcComet
+// NewNsoJsonRpcComet constructor
 //
 //	:param protocol: http, https
 //	:param ip: a IPv4 address, or a CNAME
