@@ -16,3 +16,6 @@
 
 # No JetBrains
 .idea/
+
+# No coverage html
+coverage.html
